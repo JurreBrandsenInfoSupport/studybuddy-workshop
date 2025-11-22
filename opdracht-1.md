@@ -62,6 +62,8 @@ Nu gaan we dezelfde feature specificeren met GitHub Copilot, maar **zonder extra
    ```
 3. Sla het resultaat op als `TASK-copilot-ongestuurd.md`
 
+> Let op: Zorg er voor dat copilot niet gaat spieken bij je handmatige versie! Haal deze zonodig even weg uit je editor.
+
 ### Stap 4: Vergelijk en analyseer
 
 Leg je drie documenten naast elkaar:
