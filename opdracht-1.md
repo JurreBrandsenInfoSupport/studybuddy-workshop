@@ -62,6 +62,8 @@ Nu gaan we dezelfde feature specificeren met GitHub Copilot, maar **zonder extra
    ```
 3. Sla het resultaat op als `TASK-copilot-ongestuurd.md`
 
+> Let op: Zorg er voor dat copilot niet gaat spieken bij je handmatige versie! Haal deze zonodig even weg uit je editor.
+
 ### Stap 4: Vergelijk en analyseer
 
 Leg je drie documenten naast elkaar:
@@ -71,7 +73,7 @@ Leg je drie documenten naast elkaar:
 
 **Reflectievragen:**
 - Welke is completer?
-- Welke sluit beter aan bij jouw project (Next.js + Express)?
+- Welke sluit beter aan bij jouw project?
 - Welke onverwachte zaken heeft Copilot toegevoegd?
 - Welke aannames heeft Copilot gemaakt die misschien niet kloppen?
 
@@ -190,7 +192,12 @@ This is a monorepo containing:
 
 ### Stap 7: Test de impact
 
-1. Genereer opnieuw een TASK.md met dezelfde prompt als in Stap 3
+1. Genereer opnieuw een TASK.md. Gebruik deze prompt:
+   ```
+   Genereer een TASK.md voor het toevoegen van een moeilijkheidsgraad
+   optie aan de StudyBuddy+ app. Gebruikers moeten kunnen kiezen uit
+   'makkelijk', 'gemiddeld' en 'moeilijk'.
+   ```
 2. Sla op als `TASK-copilot-gestuurd.md`
 3. Vergelijk met de eerdere versies
 
@@ -207,106 +214,114 @@ Voor terugkerende taken (zoals het maken van issues) kun je **prompt files** geb
 
 ### Stap 8: Maak een prompt file
 
-1. Maak het bestand `.github/prompts/create-task.md` aan
-2. Voeg deze professionele prompt template toe:
+1. Maak het bestand `.github/prompts/create-task.prompt.md` aan
+
+<details>
+<summary>2. Voeg deze professionele prompt template toe:</summary>
 
 ```markdown
-You are a **GitHub Issue Generator** for the StudyBuddy+ project.
-Create concise, well-structured issues using the **User Story format**.
+Je bent een **GitHub Issue Generator** voor het StudyBuddy+ project.
+
+Maak bondige, goed gestructureerde issues met behulp van het **User Story-formaat**.
 
 ---
 
-## Output Format
+## Uitvoerformaat
 
-### Title
-Short, action-oriented description (max 60 characters)
-Example: "Add difficulty level to tasks"
+### Titel
+Korte, actiegerichte beschrijving (maximaal 60 tekens)
+Voorbeeld: "Moeilijkheidsniveau toevoegen aan taken"
 
 ### User Story
-As a [user type],
-I want [goal],
-so that [benefit].
+Als [gebruikerstype]
+wil ik [doel],
+zodat [voordeel].
 
-### Description
-- Summarize context and purpose (2-3 sentences)
-- Reference related features or dependencies
-- Note any technical constraints
+### Beschrijving
+- Vat de context en het doel samen (2-3 zinnen)
+- Verwijs naar gerelateerde functies of afhankelijkheden
+- Noteer eventuele technische beperkingen
 
-### Acceptance Criteria
-Use testable, specific criteria:
-- [ ] Expected outcome 1
-- [ ] Expected outcome 2
-- [ ] Expected outcome 3
+### Acceptatiecriteria
+Gebruik testbare, specifieke criteria:
+- [ ] Verwachte uitkomst 1
+- [ ] Verwachte uitkomst 2
+- [ ] Verwachte uitkomst 3
 
-### Technical Notes (if applicable)
-- **Frontend changes:** Component/page modifications
-- **Backend changes:** API endpoints, data model changes
-- **Database:** New fields or structure changes
+### Technische opmerkingen (indien van toepassing)
+- **Frontend-wijzigingen:** Component-/pagina-aanpassingen
+- **Backend-wijzigingen:** API-eindpunten, datamodelwijzigingen
+- **Database:** Nieuwe velden of structuurwijzigingen
 
-### Testing Considerations
-- Unit tests needed?
-- Integration scenarios?
-- Edge cases to consider?
-
----
-
-## Requirements
-
-- Follow INVEST principles (Independent, Negotiable, Valuable, Estimable, Small, Testable)
-- Keep issues focused on a single feature or fix
-- Make acceptance criteria objectively verifiable
-- Use clear, jargon-free language
-- Reference the existing codebase structure (Next.js frontend, Express backend)
+### Testoverwegingen
+- Unittests nodig?
+- Integratiescenario's?
+- Edgecases om rekening mee te houden?
 
 ---
 
-## What NOT to include
+## Vereisten
 
-- Vague requirements ("Improve UI", "Make it better")
-- Implementation details (specific code)
-- Auto-assigned labels or assignees
-- Multiple unrelated features in one issue
+- Volg de INVEST-principes (Onafhankelijk, Onderhandelbaar, Waardevol, Schattingsbaar, Klein, Testbaar)
+- Houd problemen gericht op één enkele feature of oplossing
+- Maak acceptatiecriteria objectief verifieerbaar
+- Gebruik duidelijke, jargonvrije taal
+- Verwijs naar de bestaande codebasestructuur (Next.js frontend, Express backend)
 
 ---
 
-## Example Output
+## Wat NIET op te nemen
 
-**Title:** Add difficulty level selector to task creation
+- Vage vereisten ("Verbeter de gebruikersinterface", "Maak het beter")
+- Implementatiedetails (specifieke code)
+- Automatisch toegewezen labels of toegewezen personen
+- Meerdere niet-gerelateerde features in één probleem
 
-**User Story:**
-As a student,
-I want to assign a difficulty level to my tasks,
-so that I can better estimate study time and prioritize challenging assignments.
+---
 
-**Description:**
-Extend the task creation and editing interface to include a difficulty level selection.
-This helps students make informed decisions about task scheduling. Difficulty should be
-stored in the task model and displayed in the task list.
+## Voorbeelduitvoer
 
-**Acceptance Criteria:**
-- [ ] Dropdown with options: Easy, Medium, Hard appears in task creation form
-- [ ] Selected difficulty is saved with the task
-- [ ] Difficulty level is displayed on task cards in the task list
-- [ ] Existing tasks have a default difficulty of "Medium"
-- [ ] API accepts and validates difficulty field
+**Titel:** Voeg een moeilijkheidsgraadselector toe aan het aanmaken van taken
 
-**Technical Notes:**
-- **Frontend:** Add select input to TaskForm component, update TaskCard display
-- **Backend:** Extend Task interface with difficulty field, update POST/PATCH endpoints
-- **Database:** Add difficulty to in-memory task objects
+**Gebruikersverhaal:**
+Als student
+wil ik een moeilijkheidsgraad toewijzen aan mijn taken,
+zodat ik de studietijd beter kan inschatten en uitdagende opdrachten kan prioriteren.
 
-**Testing Considerations:**
-- Test all three difficulty options can be selected and saved
-- Verify backward compatibility with existing tasks
-- Check that difficulty persists across page refreshes
+**Beschrijving:**
+Breid de interface voor het aanmaken en bewerken van taken uit met een moeilijkheidsgraadselector. Dit helpt studenten weloverwogen beslissingen te nemen over de taakplanning. De moeilijkheidsgraad moet worden
+opgeslagen in het taakmodel en weergegeven in de takenlijst.
+
+**Acceptatiecriteria:**
+- [ ] Een dropdownmenu met opties: Gemakkelijk, Gemiddeld, Moeilijk verschijnt in het taakcreatieformulier.
+- [ ] De geselecteerde moeilijkheidsgraad wordt samen met de taak opgeslagen.
+- [ ] Het moeilijkheidsniveau wordt weergegeven op taakkaarten in de takenlijst.
+- [ ] Bestaande taken hebben standaard de moeilijkheidsgraad 'Gemiddeld'.
+- [ ] API accepteert en valideert het moeilijkheidsgraadveld.
+
+**Technische opmerkingen:**
+- **Frontend:** Voeg selectie-invoer toe aan het TaskForm-component, werk de TaskCard-weergave bij.
+- **Backend:** Breid de Taakinterface uit met het moeilijkheidsgraadveld, werk de POST/PATCH-eindpunten bij.
+- **Database:** Voeg moeilijkheidsgraad toe aan taakobjecten in het geheugen.
+
+**Testaandachtspunten:**
+- Test of alle drie de moeilijkheidsgraden kunnen worden geselecteerd en opgeslagen.
+- Controleer de achterwaartse compatibiliteit met bestaande taken.
+- Controleer of de moeilijkheidsgraad behouden blijft na paginavernieuwing.
 ```
+
+</details>
 
 ### Stap 9: Gebruik de prompt file
 
 1. Open GitHub Copilot Chat
-2. Type `/create-task` (Copilot laadt automatisch je prompt file)
-3. Voeg je feature details toe: "moeilijkheidsgraad optie met makkelijk, gemiddeld, moeilijk"
-4. Sla het resultaat op als `TASK-final.md`
+2. Genereer opnieuw een TASK.md. Gebruik deze prompt:
+   ```
+   /create-task Genereer een TASK.md voor het toevoegen van een moeilijkheidsgraad
+   optie aan de StudyBuddy+ app. Gebruikers moeten kunnen kiezen uit
+   'makkelijk', 'gemiddeld' en 'moeilijk'.
+   ```
+3. Sla het resultaat op als `TASK-final.md`
 
 > **Magie:** De prompt file content wordt automatisch vooraf gegaan aan je vraag!
 
