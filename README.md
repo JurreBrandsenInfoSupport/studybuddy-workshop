@@ -1,30 +1,70 @@
 # StudyBuddy+ app
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+A student task manager application with a Next.js frontend and Node.js/Express backend.
 
 [![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/jurrebrandseninfosupports-projects/v0-study-buddy-app)
 [![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/un0TbX7m7YV)
 
-## Overview
+## Project Structure
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+```
+studybuddy-workshop/
+├── frontend/          # Next.js frontend application
+├── backend/           # Express API backend
+└── docker-compose.yml # Docker orchestration
+```
 
-## Deployment
+## Quick Start (Recommended for Development)
 
-Your project is live at:
+### 1. Start the Backend
 
-**[https://vercel.com/jurrebrandseninfosupports-projects/v0-study-buddy-app](https://vercel.com/jurrebrandseninfosupports-projects/v0-study-buddy-app)**
+```bash
+cd backend
+npm install
+npm run dev
+```
 
-## Build your app
+The backend API will run on http://localhost:3001
 
-Continue building your app on:
+### 2. Start the Frontend
 
-**[https://v0.app/chat/un0TbX7m7YV](https://v0.app/chat/un0TbX7m7YV)**
+In a new terminal:
 
-## How It Works
+```bash
+cd frontend
+cp .env.example .env.local  # Copy environment variables
+pnpm install
+pnpm run dev
+```
 
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+The frontend will run on http://localhost:3000
+
+## Docker Setup (Alternative)
+
+You can also run the application using Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+This will start both services:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:3001
+
+**Note:** Some environments may have SSL certificate issues with Docker builds. If you encounter these, use the development setup above instead.
+
+## API Endpoints
+
+- `GET /api/tasks` - Get all tasks
+- `POST /api/tasks` - Create a new task
+- `PATCH /api/tasks/:id` - Update task status
+- `DELETE /api/tasks/:id` - Delete a task
+
+## Features
+
+- ✅ Create, read, update, and delete study tasks
+- ✅ Track task status (todo, in-progress, done)
+- ✅ Estimate time for each task
+- ✅ Filter and sort tasks
+- ✅ In-memory database with seeded example data
+- ✅ Docker support for easy deployment
