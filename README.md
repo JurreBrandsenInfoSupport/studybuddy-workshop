@@ -14,21 +14,9 @@ studybuddy-workshop/
 └── docker-compose.yml # Docker orchestration
 ```
 
-## Getting Started with Docker
+## Quick Start (Recommended for Development)
 
-The easiest way to run the application is using Docker Compose:
-
-```bash
-docker-compose up --build
-```
-
-This will start both services:
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:3001
-
-## Development Setup
-
-### Backend
+### 1. Start the Backend
 
 ```bash
 cd backend
@@ -38,17 +26,32 @@ npm run dev
 
 The backend API will run on http://localhost:3001
 
-### Frontend
+### 2. Start the Frontend
+
+In a new terminal:
 
 ```bash
 cd frontend
+cp .env.example .env.local  # Copy environment variables
 pnpm install
 pnpm run dev
 ```
 
 The frontend will run on http://localhost:3000
 
-Make sure the backend is running before starting the frontend.
+## Docker Setup (Alternative)
+
+You can also run the application using Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+This will start both services:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:3001
+
+**Note:** Some environments may have SSL certificate issues with Docker builds. If you encounter these, use the development setup above instead.
 
 ## API Endpoints
 
