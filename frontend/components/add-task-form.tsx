@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState } from "react"
-import type { CreateTaskInput } from "@/lib/types"
+import type { CreateTaskInput, TaskDifficulty } from "@/lib/types"
 import { Plus, Loader2, X } from "lucide-react"
 
 interface AddTaskFormProps {
@@ -17,6 +17,7 @@ export function AddTaskForm({ onAddTask }: AddTaskFormProps) {
     title: "",
     subject: "",
     estimatedMinutes: "",
+    difficulty: "medium" as TaskDifficulty,
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,10 +33,11 @@ export function AddTaskForm({ onAddTask }: AddTaskFormProps) {
         title: formData.title,
         subject: formData.subject,
         estimatedMinutes: minutes,
+        difficulty: formData.difficulty,
       })
 
       // Reset and close
-      setFormData({ title: "", subject: "", estimatedMinutes: "" })
+      setFormData({ title: "", subject: "", estimatedMinutes: "", difficulty: "medium" as TaskDifficulty })
       setIsExpanded(false)
     } finally {
       setIsSubmitting(false)
@@ -128,6 +130,23 @@ export function AddTaskForm({ onAddTask }: AddTaskFormProps) {
               className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
           </div>
+        </div>
+
+        <div>
+          <label htmlFor="difficulty" className="mb-1.5 block text-sm font-semibold text-slate-700">
+            Difficulty <span className="text-red-500">*</span>
+          </label>
+          <select
+            id="difficulty"
+            required
+            value={formData.difficulty}
+            onChange={(e) => setFormData((prev) => ({ ...prev, difficulty: e.target.value as TaskDifficulty }))}
+            className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          >
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
         </div>
 
         <button

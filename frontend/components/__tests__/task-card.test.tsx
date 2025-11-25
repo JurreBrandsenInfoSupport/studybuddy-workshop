@@ -13,6 +13,7 @@ describe('TaskCard', () => {
     subject: 'Mathematics',
     estimatedMinutes: 60,
     status: 'todo',
+    difficulty: 'medium',
     createdAt: '2024-01-01T00:00:00Z',
   }
 
@@ -35,6 +36,29 @@ describe('TaskCard', () => {
     expect(screen.getByText('Mathematics')).toBeInTheDocument()
     expect(screen.getByText('60 min')).toBeInTheDocument()
     expect(screen.getByText('To Do')).toBeInTheDocument()
+  })
+
+  it('should display task difficulty', () => {
+    const mockTask: StudyTask = {
+      id: '1',
+      title: 'Test Task',
+      subject: 'Math',
+      estimatedMinutes: 60,
+      status: 'todo',
+      difficulty: 'hard',
+      createdAt: new Date().toISOString(),
+    }
+
+    render(
+      <TaskCard
+        task={mockTask}
+        onStatusChange={mockOnStatusChange}
+        onDelete={mockOnDelete}
+        isUpdating={false}
+      />
+    )
+
+    expect(screen.getByText('Hard')).toBeInTheDocument()
   })
 
   it('should display correct status badge for todo tasks', () => {
@@ -156,7 +180,7 @@ describe('TaskCard', () => {
 
   it('should call onDelete when clicking delete button', async () => {
     const user = userEvent.setup()
-    
+
     render(
       <TaskCard
         task={baseMockTask}

@@ -20,6 +20,7 @@ describe('StudyDashboard', () => {
       subject: 'Mathematics',
       estimatedMinutes: 60,
       status: 'todo',
+      difficulty: 'medium',
       createdAt: '2024-01-01T00:00:00Z',
     },
     {
@@ -28,6 +29,7 @@ describe('StudyDashboard', () => {
       subject: 'Science',
       estimatedMinutes: 45,
       status: 'in-progress',
+      difficulty: 'easy',
       createdAt: '2024-01-01T01:00:00Z',
     },
     {
@@ -36,6 +38,7 @@ describe('StudyDashboard', () => {
       subject: 'History',
       estimatedMinutes: 90,
       status: 'done',
+      difficulty: 'hard',
       createdAt: '2024-01-01T02:00:00Z',
     },
   ]
@@ -185,6 +188,7 @@ describe('StudyDashboard', () => {
       subject: 'Physics',
       estimatedMinutes: 30,
       status: 'todo',
+      difficulty: 'medium',
       createdAt: '2024-01-01T03:00:00Z',
     }
     mockCreateTask.mockResolvedValue(newTask)
@@ -211,6 +215,7 @@ describe('StudyDashboard', () => {
         title: 'New Task',
         subject: 'Physics',
         estimatedMinutes: 30,
+        difficulty: 'medium',
       })
       expect(screen.getByText('New Task')).toBeInTheDocument()
     })

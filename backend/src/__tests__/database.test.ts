@@ -47,6 +47,7 @@ describe("Database", () => {
         title: "Test Task",
         subject: "Testing",
         estimatedMinutes: 30,
+        difficulty: "medium" as const,
       };
 
       const newTask = db.createTask(input);
@@ -65,11 +66,13 @@ describe("Database", () => {
         title: "Task 1",
         subject: "Subject 1",
         estimatedMinutes: 30,
+        difficulty: "easy",
       });
       const task2 = db.createTask({
         title: "Task 2",
         subject: "Subject 2",
         estimatedMinutes: 45,
+        difficulty: "hard",
       });
 
       expect(task1.id).toBe("5");
@@ -82,6 +85,7 @@ describe("Database", () => {
         title: "New Task",
         subject: "Subject",
         estimatedMinutes: 60,
+        difficulty: "medium",
       });
       const newCount = db.getAllTasks().length;
 
@@ -159,7 +163,7 @@ describe("Database", () => {
   describe("reset", () => {
     it("should reset database to initial state", () => {
       // Modify the database
-      db.createTask({ title: "Test", subject: "Test", estimatedMinutes: 30 });
+      db.createTask({ title: "Test", subject: "Test", estimatedMinutes: 30, difficulty: "easy" });
       db.deleteTask("1");
       db.updateTask("2", { status: "done" });
 
@@ -174,10 +178,10 @@ describe("Database", () => {
     });
 
     it("should reset the next id counter", () => {
-      db.createTask({ title: "Test", subject: "Test", estimatedMinutes: 30 });
+      db.createTask({ title: "Test", subject: "Test", estimatedMinutes: 30, difficulty: "medium" });
       db.reset();
       
-      const newTask = db.createTask({ title: "Test", subject: "Test", estimatedMinutes: 30 });
+      const newTask = db.createTask({ title: "Test", subject: "Test", estimatedMinutes: 30, difficulty: "medium" });
       expect(newTask.id).toBe("5");
     });
   });

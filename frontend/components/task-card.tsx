@@ -1,6 +1,6 @@
 "use client"
-import type { StudyTask, TaskStatus } from "@/lib/types"
-import { Clock, BookOpen, Trash2 } from "lucide-react"
+import type { StudyTask, TaskStatus, TaskDifficulty } from "@/lib/types"
+import { Clock, BookOpen, Trash2, Signal } from "lucide-react"
 
 interface TaskCardProps {
   task: StudyTask
@@ -20,6 +20,24 @@ export function TaskCard({ task, onStatusChange, onDelete, isUpdating }: TaskCar
     todo: "bg-slate-100 text-slate-600",
     "in-progress": "bg-blue-100 text-blue-700",
     done: "bg-emerald-100 text-emerald-700",
+  }
+
+  const difficultyConfig = {
+    easy: {
+      label: "Easy",
+      color: "text-emerald-700",
+      icon: "text-emerald-500",
+    },
+    medium: {
+      label: "Medium",
+      color: "text-amber-700",
+      icon: "text-amber-500",
+    },
+    hard: {
+      label: "Hard",
+      color: "text-rose-700",
+      icon: "text-rose-500",
+    },
   }
 
   return (
@@ -61,6 +79,12 @@ export function TaskCard({ task, onStatusChange, onDelete, isUpdating }: TaskCar
           <div className="flex items-center gap-1.5">
             <Clock className="h-4 w-4 text-slate-400" />
             <span>{task.estimatedMinutes} min</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Signal className={`h-4 w-4 ${difficultyConfig[task.difficulty].icon}`} />
+            <span className={`font-medium ${difficultyConfig[task.difficulty].color}`}>
+              {difficultyConfig[task.difficulty].label}
+            </span>
           </div>
         </div>
       </div>

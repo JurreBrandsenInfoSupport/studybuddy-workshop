@@ -8,6 +8,7 @@ const INITIAL_TASKS: StudyTask[] = [
     subject: "Math",
     estimatedMinutes: 60,
     status: "todo",
+    difficulty: "medium",
     createdAt: new Date(Date.now() - 86400000).toISOString(),
   },
   {
@@ -16,6 +17,7 @@ const INITIAL_TASKS: StudyTask[] = [
     subject: "Biology",
     estimatedMinutes: 45,
     status: "in-progress",
+    difficulty: "medium",
     createdAt: new Date(Date.now() - 172800000).toISOString(),
   },
   {
@@ -24,6 +26,7 @@ const INITIAL_TASKS: StudyTask[] = [
     subject: "History",
     estimatedMinutes: 120,
     status: "todo",
+    difficulty: "medium",
     createdAt: new Date(Date.now() - 43200000).toISOString(),
   },
   {
@@ -32,6 +35,7 @@ const INITIAL_TASKS: StudyTask[] = [
     subject: "French",
     estimatedMinutes: 30,
     status: "done",
+    difficulty: "medium",
     createdAt: new Date(Date.now() - 259200000).toISOString(),
   },
 ];

@@ -28,6 +28,7 @@ describe('AddTaskForm', () => {
     expect(screen.getByLabelText(/Task Title/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/Subject/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/Est. Minutes/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/Difficulty/i)).toBeInTheDocument()
   })
 
   it('should collapse form when clicking close button', async () => {
@@ -36,7 +37,7 @@ describe('AddTaskForm', () => {
 
     // Expand form
     await user.click(screen.getByText('Add New Task'))
-    
+
     // Close form
     const closeButton = screen.getByRole('button', { name: '' })
     await user.click(closeButton)
@@ -58,10 +59,12 @@ describe('AddTaskForm', () => {
     const titleInput = screen.getByLabelText(/Task Title/i)
     const subjectInput = screen.getByLabelText(/Subject/i)
     const minutesInput = screen.getByLabelText(/Est. Minutes/i)
+    const difficultySelect = screen.getByLabelText(/Difficulty/i)
 
     await user.type(titleInput, 'Complete Algebra Homework')
     await user.type(subjectInput, 'Math')
     await user.type(minutesInput, '60')
+    await user.selectOptions(difficultySelect, 'hard')
 
     // Submit
     const submitButton = screen.getByText('Create Task')
@@ -72,6 +75,7 @@ describe('AddTaskForm', () => {
         title: 'Complete Algebra Homework',
         subject: 'Math',
         estimatedMinutes: 60,
+        difficulty: 'hard',
       })
     })
   })
@@ -118,10 +122,10 @@ describe('AddTaskForm', () => {
 
     // Check loading state
     expect(screen.getByText('Adding...')).toBeInTheDocument()
-    
+
     // Resolve the promise
     resolveSubmit!()
-    
+
     await waitFor(() => {
       expect(screen.queryByText('Adding...')).not.toBeInTheDocument()
     })
@@ -174,5 +178,30 @@ describe('AddTaskForm', () => {
     expect(titleInput.value).toBe('My Task')
     expect(subjectInput.value).toBe('History')
     expect(minutesInput.value).toBe('90')
+  })
+
+  it('should default to medium difficulty', async () => {
+    const user = userEvent.setup()
+    render(<AddTaskForm onAddTask={mockOnAddTask} />)
+
+    await user.click(screen.getByText('Add New Task'))
+
+    const difficultySelect = screen.getByLabelText(/Difficulty/i) as HTMLSelectElement
+    expect(difficultySelect.value).toBe('medium')
+  })
+
+  it('should have all difficulty options available', async () => {
+    const user = userEvent.setup()
+    render(<AddTaskForm onAddTask={mockOnAddTask} />)
+
+    await user.click(screen.getByText('Add New Task'))
+
+    const difficultySelect = screen.getByLabelText(/Difficulty/i)
+    const options = Array.from(difficultySelect.querySelectorAll('option'))
+
+    expect(options).toHaveLength(3)
+    expect(options[0]).toHaveTextContent('Easy')
+    expect(options[1]).toHaveTextContent('Medium')
+    expect(options[2]).toHaveTextContent('Hard')
   })
 })

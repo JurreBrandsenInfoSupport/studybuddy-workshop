@@ -34,9 +34,13 @@ app.get("/api/tasks/:id", (req: Request, res: Response) => {
 // Create a new task
 app.post("/api/tasks", (req: Request, res: Response) => {
   const input: CreateTaskInput = req.body;
-  
-  if (!input.title || !input.subject || typeof input.estimatedMinutes !== "number") {
+
+  if (!input.title || !input.subject || typeof input.estimatedMinutes !== "number" || !input.difficulty) {
     return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  if (!["easy", "medium", "hard"].includes(input.difficulty)) {
+    return res.status(400).json({ error: "Invalid difficulty level" });
   }
 
   const newTask = db.createTask(input);
@@ -46,13 +50,13 @@ app.post("/api/tasks", (req: Request, res: Response) => {
 // Update task status
 app.patch("/api/tasks/:id", (req: Request, res: Response) => {
   const { status } = req.body;
-  
+
   if (!status || !["todo", "in-progress", "done"].includes(status)) {
     return res.status(400).json({ error: "Invalid status" });
   }
 
   const updatedTask = db.updateTask(req.params.id, { status: status as TaskStatus });
-  
+
   if (!updatedTask) {
     return res.status(404).json({ error: "Task not found" });
   }
@@ -63,7 +67,7 @@ app.patch("/api/tasks/:id", (req: Request, res: Response) => {
 // Delete a task
 app.delete("/api/tasks/:id", (req: Request, res: Response) => {
   const deleted = db.deleteTask(req.params.id);
-  
+
   if (!deleted) {
     return res.status(404).json({ error: "Task not found" });
   }

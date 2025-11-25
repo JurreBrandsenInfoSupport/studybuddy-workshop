@@ -28,6 +28,7 @@ describe("API Endpoints", () => {
       expect(response.body[0]).toHaveProperty("subject");
       expect(response.body[0]).toHaveProperty("estimatedMinutes");
       expect(response.body[0]).toHaveProperty("status");
+      expect(response.body[0]).toHaveProperty("difficulty");
       expect(response.body[0]).toHaveProperty("createdAt");
     });
 
@@ -68,6 +69,7 @@ describe("API Endpoints", () => {
         title: "Test Task",
         subject: "Testing",
         estimatedMinutes: 45,
+        difficulty: "medium",
       };
 
       const response = await request(app)
@@ -80,8 +82,59 @@ describe("API Endpoints", () => {
       expect(response.body.title).toBe(newTask.title);
       expect(response.body.subject).toBe(newTask.subject);
       expect(response.body.estimatedMinutes).toBe(newTask.estimatedMinutes);
+      expect(response.body.difficulty).toBe(newTask.difficulty);
       expect(response.body.status).toBe("todo");
       expect(response.body.createdAt).toBeDefined();
+    });
+
+    it("should create task with difficulty level", async () => {
+      const newTask = {
+        title: "Test Task",
+        subject: "Testing",
+        estimatedMinutes: 45,
+        difficulty: "hard",
+      };
+
+      const response = await request(app)
+        .post("/api/tasks")
+        .send(newTask)
+        .set("Content-Type", "application/json");
+
+      expect(response.status).toBe(201);
+      expect(response.body.difficulty).toBe("hard");
+    });
+
+    it("should return 400 for invalid difficulty level", async () => {
+      const newTask = {
+        title: "Test Task",
+        subject: "Testing",
+        estimatedMinutes: 45,
+        difficulty: "super-hard",
+      };
+
+      const response = await request(app)
+        .post("/api/tasks")
+        .send(newTask)
+        .set("Content-Type", "application/json");
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ error: "Invalid difficulty level" });
+    });
+
+    it("should return 400 when difficulty is missing", async () => {
+      const newTask = {
+        title: "Test Task",
+        subject: "Testing",
+        estimatedMinutes: 45,
+      };
+
+      const response = await request(app)
+        .post("/api/tasks")
+        .send(newTask)
+        .set("Content-Type", "application/json");
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ error: "Missing required fields" });
     });
 
     it("should return 400 when title is missing", async () => {
@@ -150,6 +203,7 @@ describe("API Endpoints", () => {
         title: "Quick Task",
         subject: "Testing",
         estimatedMinutes: 0,
+        difficulty: "easy",
       };
 
       const response = await request(app)
@@ -166,6 +220,7 @@ describe("API Endpoints", () => {
         title: "Long Task",
         subject: "Testing",
         estimatedMinutes: 999999,
+        difficulty: "hard",
       };
 
       const response = await request(app)
@@ -242,7 +297,7 @@ describe("API Endpoints", () => {
 
     it("should preserve other task properties when updating status", async () => {
       const originalTask = db.getTaskById("1");
-      
+
       const response = await request(app)
         .patch("/api/tasks/1")
         .send({ status: "done" })
@@ -325,6 +380,7 @@ describe("API Endpoints", () => {
             title: `Task ${i}`,
             subject: "Testing",
             estimatedMinutes: 30,
+            difficulty: "medium",
           })
           .set("Content-Type", "application/json")
       );
@@ -344,6 +400,7 @@ describe("API Endpoints", () => {
         title: "Task with special chars: @#$%^&*()",
         subject: "Testing",
         estimatedMinutes: 30,
+        difficulty: "easy",
       };
 
       const response = await request(app)
@@ -360,6 +417,7 @@ describe("API Endpoints", () => {
         title: "A".repeat(1000),
         subject: "Testing",
         estimatedMinutes: 30,
+        difficulty: "hard",
       };
 
       const response = await request(app)
