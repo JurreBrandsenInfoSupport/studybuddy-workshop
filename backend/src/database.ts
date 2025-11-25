@@ -74,6 +74,12 @@ class Database {
     this.tasks.splice(index, 1);
     return true;
   }
+
+  // Reset database to initial state (useful for testing)
+  reset(): void {
+    this.tasks = [...INITIAL_TASKS];
+    this.nextId = 5;
+  }
 }
 
 export const db = new Database();
