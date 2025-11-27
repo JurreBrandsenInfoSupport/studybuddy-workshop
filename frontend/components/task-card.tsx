@@ -1,15 +1,18 @@
 "use client"
-import type { StudyTask, TaskStatus, TaskDifficulty } from "@/lib/types"
-import { Clock, BookOpen, Trash2, Signal } from "lucide-react"
+import { useState } from "react"
+import type { StudyTask, TaskStatus, TaskDifficulty, FunRating } from "@/lib/types"
+import { Clock, BookOpen, Trash2, Signal, Star } from "lucide-react"
 
 interface TaskCardProps {
   task: StudyTask
-  onStatusChange: (id: string, status: TaskStatus) => Promise<void>
+  onStatusChange: (id: string, status: TaskStatus, funRating?: FunRating) => Promise<void>
   onDelete: (id: string) => Promise<void>
   isUpdating: boolean
 }
 
 export function TaskCard({ task, onStatusChange, onDelete, isUpdating }: TaskCardProps) {
+  const [showFunRating, setShowFunRating] = useState(false)
+
   const statusColors = {
     todo: "bg-white border-slate-200 hover:border-indigo-300",
     "in-progress": "bg-blue-50/50 border-blue-200 hover:border-blue-300",
@@ -38,6 +41,19 @@ export function TaskCard({ task, onStatusChange, onDelete, isUpdating }: TaskCar
       color: "text-rose-700",
       icon: "text-rose-500",
     },
+  }
+
+  const handleComplete = () => {
+    setShowFunRating(true)
+  }
+
+  const handleFunRatingSelect = async (rating: FunRating) => {
+    setShowFunRating(false)
+    await onStatusChange(task.id, "done", rating)
+  }
+
+  const handleCancelRating = () => {
+    setShowFunRating(false)
   }
 
   return (
@@ -86,8 +102,42 @@ export function TaskCard({ task, onStatusChange, onDelete, isUpdating }: TaskCar
               {difficultyConfig[task.difficulty].label}
             </span>
           </div>
+          {task.status === "done" && task.funRating && (
+            <div className="flex items-center gap-1.5">
+              <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
+              <span className="font-medium text-amber-700">Fun: {task.funRating}/5</span>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Fun Rating Selector */}
+      {showFunRating && (
+        <div className="mb-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+          <p className="text-sm font-semibold text-slate-700 mb-2">How fun was this task?</p>
+          <div className="flex gap-2 mb-2">
+            {[1, 2, 3, 4, 5].map((rating) => (
+              <button
+                key={rating}
+                onClick={() => handleFunRatingSelect(rating as FunRating)}
+                className="flex-1 p-2 rounded-lg border-2 border-amber-300 bg-white hover:bg-amber-100 hover:border-amber-400 transition-colors"
+                title={`Rate ${rating} stars`}
+              >
+                <div className="flex flex-col items-center gap-1">
+                  <Star className="h-5 w-5 text-amber-400 fill-amber-400" />
+                  <span className="text-xs font-bold text-slate-700">{rating}</span>
+                </div>
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={handleCancelRating}
+            className="w-full text-xs text-slate-500 hover:text-slate-700 py-1"
+          >
+            Cancel
+          </button>
+        </div>
+      )}
 
       {/* Actions */}
       <div className="mt-auto pt-3 border-t border-slate-100/50">
@@ -110,7 +160,7 @@ export function TaskCard({ task, onStatusChange, onDelete, isUpdating }: TaskCar
           )}
           {task.status !== "done" && (
             <button
-              onClick={() => onStatusChange(task.id, "done")}
+              onClick={handleComplete}
               className="flex-1 rounded-lg border border-emerald-200 bg-emerald-50 py-1.5 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 transition-colors"
             >
               Complete

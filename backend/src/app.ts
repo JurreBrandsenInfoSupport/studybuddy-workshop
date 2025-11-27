@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import { db } from "./database";
-import { CreateTaskInput, TaskStatus } from "./types";
+import { CreateTaskInput, TaskStatus, StudyTask } from "./types";
 
 const app = express();
 
@@ -47,15 +47,24 @@ app.post("/api/tasks", (req: Request, res: Response) => {
   res.status(201).json(newTask);
 });
 
-// Update task status
+// Update task status and/or fun rating
 app.patch("/api/tasks/:id", (req: Request, res: Response) => {
-  const { status } = req.body;
+  const { status, funRating } = req.body;
 
   if (!status || !["todo", "in-progress", "done"].includes(status)) {
     return res.status(400).json({ error: "Invalid status" });
   }
 
-  const updatedTask = db.updateTask(req.params.id, { status: status as TaskStatus });
+  if (funRating !== undefined && (typeof funRating !== "number" || funRating < 1 || funRating > 5 || !Number.isInteger(funRating))) {
+    return res.status(400).json({ error: "Invalid fun rating. Must be an integer between 1 and 5" });
+  }
+
+  const updates: Partial<StudyTask> = { status: status as TaskStatus };
+  if (funRating !== undefined) {
+    updates.funRating = funRating;
+  }
+
+  const updatedTask = db.updateTask(req.params.id, updates);
 
   if (!updatedTask) {
     return res.status(404).json({ error: "Task not found" });

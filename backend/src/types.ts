@@ -2,6 +2,8 @@ export type TaskStatus = "todo" | "in-progress" | "done";
 
 export type TaskDifficulty = "easy" | "medium" | "hard";
 
+export type FunRating = 1 | 2 | 3 | 4 | 5;
+
 export interface StudyTask {
   id: string;
   title: string;
@@ -10,6 +12,7 @@ export interface StudyTask {
   status: TaskStatus;
   difficulty: TaskDifficulty;
   createdAt: string;
+  funRating?: FunRating;
 }
 
 export interface CreateTaskInput {

@@ -175,7 +175,11 @@ describe('TaskCard', () => {
     )
 
     await user.click(screen.getByText('Complete'))
-    expect(mockOnStatusChange).toHaveBeenCalledWith('1', 'done')
+    // Should show fun rating selector
+    expect(screen.getByText('How fun was this task?')).toBeInTheDocument()
+    
+    // Not called until a rating is selected
+    expect(mockOnStatusChange).not.toHaveBeenCalled()
   })
 
   it('should call onDelete when clicking delete button', async () => {
@@ -243,5 +247,128 @@ describe('TaskCard', () => {
     const card = screen.getByText('Complete Math Assignment').closest('div')?.parentElement
     expect(card?.className).toContain('opacity-60')
     expect(card?.className).toContain('pointer-events-none')
+  })
+
+  describe('Fun Rating Feature', () => {
+    it('should show fun rating selector when Complete button is clicked', async () => {
+      const user = userEvent.setup()
+      render(
+        <TaskCard
+          task={baseMockTask}
+          onStatusChange={mockOnStatusChange}
+          onDelete={mockOnDelete}
+          isUpdating={false}
+        />
+      )
+
+      await user.click(screen.getByText('Complete'))
+      
+      expect(screen.getByText('How fun was this task?')).toBeInTheDocument()
+      expect(screen.getByText('Cancel')).toBeInTheDocument()
+    })
+
+    it('should call onStatusChange with rating when a rating is selected', async () => {
+      const user = userEvent.setup()
+      render(
+        <TaskCard
+          task={baseMockTask}
+          onStatusChange={mockOnStatusChange}
+          onDelete={mockOnDelete}
+          isUpdating={false}
+        />
+      )
+
+      await user.click(screen.getByText('Complete'))
+      
+      // Click on rating 5
+      const ratingButtons = screen.getAllByTitle(/Rate \d stars/)
+      await user.click(ratingButtons[4]) // Rating 5 (0-indexed)
+      
+      expect(mockOnStatusChange).toHaveBeenCalledWith('1', 'done', 5)
+    })
+
+    it('should hide fun rating selector when Cancel is clicked', async () => {
+      const user = userEvent.setup()
+      render(
+        <TaskCard
+          task={baseMockTask}
+          onStatusChange={mockOnStatusChange}
+          onDelete={mockOnDelete}
+          isUpdating={false}
+        />
+      )
+
+      await user.click(screen.getByText('Complete'))
+      expect(screen.getByText('How fun was this task?')).toBeInTheDocument()
+      
+      await user.click(screen.getByText('Cancel'))
+      expect(screen.queryByText('How fun was this task?')).not.toBeInTheDocument()
+      expect(mockOnStatusChange).not.toHaveBeenCalled()
+    })
+
+    it('should display fun rating for completed tasks', () => {
+      const completedTask: StudyTask = {
+        ...baseMockTask,
+        status: 'done',
+        funRating: 4,
+      }
+
+      render(
+        <TaskCard
+          task={completedTask}
+          onStatusChange={mockOnStatusChange}
+          onDelete={mockOnDelete}
+          isUpdating={false}
+        />
+      )
+
+      expect(screen.getByText('Fun: 4/5')).toBeInTheDocument()
+    })
+
+    it('should not display fun rating for completed tasks without a rating', () => {
+      const completedTask: StudyTask = {
+        ...baseMockTask,
+        status: 'done',
+      }
+
+      render(
+        <TaskCard
+          task={completedTask}
+          onStatusChange={mockOnStatusChange}
+          onDelete={mockOnDelete}
+          isUpdating={false}
+        />
+      )
+
+      expect(screen.queryByText(/Fun:/)).not.toBeInTheDocument()
+    })
+
+    it('should allow selecting different ratings', async () => {
+      const user = userEvent.setup()
+      render(
+        <TaskCard
+          task={baseMockTask}
+          onStatusChange={mockOnStatusChange}
+          onDelete={mockOnDelete}
+          isUpdating={false}
+        />
+      )
+
+      await user.click(screen.getByText('Complete'))
+      
+      const ratingButtons = screen.getAllByTitle(/Rate \d stars/)
+      
+      // Test rating 1
+      await user.click(ratingButtons[0])
+      expect(mockOnStatusChange).toHaveBeenCalledWith('1', 'done', 1)
+      
+      mockOnStatusChange.mockClear()
+      
+      // Reopen the selector and test rating 3
+      await user.click(screen.getByText('Complete'))
+      const newRatingButtons = screen.getAllByTitle(/Rate \d stars/)
+      await user.click(newRatingButtons[2])
+      expect(mockOnStatusChange).toHaveBeenCalledWith('1', 'done', 3)
+    })
   })
 })
