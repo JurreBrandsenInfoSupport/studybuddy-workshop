@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import { db } from "./database";
-import { CreateTaskInput, TaskStatus } from "./types";
+import { CreateTaskInput, TaskStatus, FunRating } from "./types";
 
 const app = express();
 
@@ -49,13 +49,25 @@ app.post("/api/tasks", (req: Request, res: Response) => {
 
 // Update task status
 app.patch("/api/tasks/:id", (req: Request, res: Response) => {
-  const { status } = req.body;
+  const { status, funRating } = req.body;
 
   if (!status || !["todo", "in-progress", "done"].includes(status)) {
     return res.status(400).json({ error: "Invalid status" });
   }
 
-  const updatedTask = db.updateTask(req.params.id, { status: status as TaskStatus });
+  // Validate funRating if provided
+  if (funRating !== undefined) {
+    if (typeof funRating !== "number" || ![1, 2, 3, 4, 5].includes(funRating)) {
+      return res.status(400).json({ error: "Invalid funRating. Must be a number between 1 and 5" });
+    }
+  }
+
+  const updates: any = { status: status as TaskStatus };
+  if (funRating !== undefined) {
+    updates.funRating = funRating;
+  }
+
+  const updatedTask = db.updateTask(req.params.id, updates);
 
   if (!updatedTask) {
     return res.status(404).json({ error: "Task not found" });

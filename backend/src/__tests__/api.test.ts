@@ -308,6 +308,73 @@ describe("API Endpoints", () => {
       expect(response.body.subject).toBe(originalTask?.subject);
       expect(response.body.estimatedMinutes).toBe(originalTask?.estimatedMinutes);
     });
+
+    it("should update task with funRating when provided", async () => {
+      const response = await request(app)
+        .patch("/api/tasks/1")
+        .send({ status: "done", funRating: 5 })
+        .set("Content-Type", "application/json");
+
+      expect(response.status).toBe(200);
+      expect(response.body.id).toBe("1");
+      expect(response.body.status).toBe("done");
+      expect(response.body.funRating).toBe(5);
+    });
+
+    it("should accept valid funRating values (1-5)", async () => {
+      const validRatings = [1, 2, 3, 4, 5];
+
+      for (const rating of validRatings) {
+        const response = await request(app)
+          .patch("/api/tasks/1")
+          .send({ status: "done", funRating: rating })
+          .set("Content-Type", "application/json");
+
+        expect(response.status).toBe(200);
+        expect(response.body.funRating).toBe(rating);
+      }
+    });
+
+    it("should return 400 for invalid funRating (out of range)", async () => {
+      const response = await request(app)
+        .patch("/api/tasks/1")
+        .send({ status: "done", funRating: 6 })
+        .set("Content-Type", "application/json");
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ error: "Invalid funRating. Must be a number between 1 and 5" });
+    });
+
+    it("should return 400 for invalid funRating (zero)", async () => {
+      const response = await request(app)
+        .patch("/api/tasks/1")
+        .send({ status: "done", funRating: 0 })
+        .set("Content-Type", "application/json");
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ error: "Invalid funRating. Must be a number between 1 and 5" });
+    });
+
+    it("should return 400 for invalid funRating (non-number)", async () => {
+      const response = await request(app)
+        .patch("/api/tasks/1")
+        .send({ status: "done", funRating: "very fun" })
+        .set("Content-Type", "application/json");
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ error: "Invalid funRating. Must be a number between 1 and 5" });
+    });
+
+    it("should allow updating status without funRating", async () => {
+      const response = await request(app)
+        .patch("/api/tasks/1")
+        .send({ status: "in-progress" })
+        .set("Content-Type", "application/json");
+
+      expect(response.status).toBe(200);
+      expect(response.body.status).toBe("in-progress");
+      expect(response.body.funRating).toBeUndefined();
+    });
   });
 
   describe("DELETE /api/tasks/:id", () => {
