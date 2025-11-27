@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import { db } from "./database";
-import { CreateTaskInput, TaskStatus, FunRating } from "./types";
+import { CreateTaskInput, TaskStatus, FunRating, StudyTask } from "./types";
 
 const app = express();
 
@@ -62,7 +62,7 @@ app.patch("/api/tasks/:id", (req: Request, res: Response) => {
     }
   }
 
-  const updates: any = { status: status as TaskStatus };
+  const updates: Partial<Pick<StudyTask, "status" | "funRating">> = { status: status as TaskStatus };
   if (funRating !== undefined) {
     updates.funRating = funRating;
   }

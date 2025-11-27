@@ -57,6 +57,18 @@ export function TaskCard({ task, onStatusChange, onDelete, isUpdating }: TaskCar
     await onStatusChange(task.id, "done")
   }
 
+  const handleDialogClose = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      handleSkipRating()
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") {
+      handleSkipRating()
+    }
+  }
+
   return (
     <>
       <div
@@ -148,15 +160,22 @@ export function TaskCard({ task, onStatusChange, onDelete, isUpdating }: TaskCar
 
       {/* Fun Rating Dialog */}
       {showFunRating && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          onClick={handleDialogClose}
+          onKeyDown={handleKeyDown}
+          role="dialog"
+          aria-labelledby="fun-rating-title"
+          aria-describedby="fun-rating-description"
+        >
           <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-md w-full mx-4 animate-in fade-in zoom-in duration-200">
             <div className="flex items-center gap-3 mb-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100">
                 <Smile className="h-6 w-6 text-amber-600" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-slate-900">How fun was this task?</h3>
-                <p className="text-sm text-slate-500">Rate your experience</p>
+                <h3 id="fun-rating-title" className="text-lg font-bold text-slate-900">How fun was this task?</h3>
+                <p id="fun-rating-description" className="text-sm text-slate-500">Rate your experience</p>
               </div>
             </div>
 
@@ -166,6 +185,7 @@ export function TaskCard({ task, onStatusChange, onDelete, isUpdating }: TaskCar
                   key={rating}
                   onClick={() => handleFunRatingSelect(rating as FunRating)}
                   className="flex flex-col items-center gap-2 p-3 rounded-xl border-2 border-slate-200 hover:border-amber-400 hover:bg-amber-50 transition-all duration-200"
+                  aria-label={`Rate ${rating} star${rating > 1 ? 's' : ''}`}
                 >
                   <span className="text-2xl">{"⭐".repeat(rating)}</span>
                   <span className="text-xs font-semibold text-slate-600">{rating}</span>
