@@ -238,7 +238,7 @@ describe('StudyDashboard', () => {
     await user.click(screen.getByText('Start'))
 
     await waitFor(() => {
-      expect(mockUpdateTaskStatus).toHaveBeenCalledWith('1', 'in-progress')
+      expect(mockUpdateTaskStatus).toHaveBeenCalledWith('1', 'in-progress', undefined)
     })
   })
 

@@ -1,15 +1,19 @@
 "use client"
+import { useState } from "react"
 import type { StudyTask, TaskStatus, TaskDifficulty } from "@/lib/types"
-import { Clock, BookOpen, Trash2, Signal } from "lucide-react"
+import { Clock, BookOpen, Trash2, Signal, Star } from "lucide-react"
 
 interface TaskCardProps {
   task: StudyTask
-  onStatusChange: (id: string, status: TaskStatus) => Promise<void>
+  onStatusChange: (id: string, status: TaskStatus, funRating?: number) => Promise<void>
   onDelete: (id: string) => Promise<void>
   isUpdating: boolean
 }
 
 export function TaskCard({ task, onStatusChange, onDelete, isUpdating }: TaskCardProps) {
+  const [showFunRating, setShowFunRating] = useState(false)
+  const [selectedFunRating, setSelectedFunRating] = useState<number | undefined>(undefined)
+
   const statusColors = {
     todo: "bg-white border-slate-200 hover:border-indigo-300",
     "in-progress": "bg-blue-50/50 border-blue-200 hover:border-blue-300",
@@ -86,37 +90,95 @@ export function TaskCard({ task, onStatusChange, onDelete, isUpdating }: TaskCar
               {difficultyConfig[task.difficulty].label}
             </span>
           </div>
+          {task.status === "done" && task.funRating && (
+            <div className="flex items-center gap-1.5">
+              <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
+              <span className="font-medium text-amber-700">
+                {task.funRating}/5 fun
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Actions */}
       <div className="mt-auto pt-3 border-t border-slate-100/50">
-        <div className="flex gap-2">
-          {task.status !== "todo" && (
-            <button
-              onClick={() => onStatusChange(task.id, "todo")}
-              className="flex-1 rounded-lg border border-slate-200 bg-white py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
-            >
-              To Do
-            </button>
-          )}
-          {task.status !== "in-progress" && (
-            <button
-              onClick={() => onStatusChange(task.id, "in-progress")}
-              className="flex-1 rounded-lg bg-blue-600 py-1.5 text-xs font-semibold text-white hover:bg-blue-700 shadow-sm transition-colors"
-            >
-              Start
-            </button>
-          )}
-          {task.status !== "done" && (
-            <button
-              onClick={() => onStatusChange(task.id, "done")}
-              className="flex-1 rounded-lg border border-emerald-200 bg-emerald-50 py-1.5 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 transition-colors"
-            >
-              Complete
-            </button>
-          )}
-        </div>
+        {showFunRating ? (
+          <div className="space-y-3">
+            <p className="text-xs font-semibold text-slate-700 text-center">How fun was this task?</p>
+            <div className="flex gap-2 justify-center">
+              {[1, 2, 3, 4, 5].map((rating) => (
+                <button
+                  key={rating}
+                  onClick={() => setSelectedFunRating(rating)}
+                  className={`flex h-10 w-10 items-center justify-center rounded-lg border-2 transition-all ${
+                    selectedFunRating === rating
+                      ? "border-amber-400 bg-amber-50"
+                      : "border-slate-200 bg-white hover:border-amber-300"
+                  }`}
+                  title={`${rating} star${rating > 1 ? "s" : ""}`}
+                >
+                  <Star
+                    className={`h-5 w-5 ${
+                      selectedFunRating === rating
+                        ? "text-amber-400 fill-amber-400"
+                        : "text-slate-300"
+                    }`}
+                  />
+                </button>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  setShowFunRating(false)
+                  setSelectedFunRating(undefined)
+                }}
+                className="flex-1 rounded-lg border border-slate-200 bg-white py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  onStatusChange(task.id, "done", selectedFunRating)
+                  setShowFunRating(false)
+                  setSelectedFunRating(undefined)
+                }}
+                disabled={!selectedFunRating}
+                className="flex-1 rounded-lg border border-emerald-200 bg-emerald-50 py-1.5 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Complete
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex gap-2">
+            {task.status !== "todo" && (
+              <button
+                onClick={() => onStatusChange(task.id, "todo")}
+                className="flex-1 rounded-lg border border-slate-200 bg-white py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+              >
+                To Do
+              </button>
+            )}
+            {task.status !== "in-progress" && (
+              <button
+                onClick={() => onStatusChange(task.id, "in-progress")}
+                className="flex-1 rounded-lg bg-blue-600 py-1.5 text-xs font-semibold text-white hover:bg-blue-700 shadow-sm transition-colors"
+              >
+                Start
+              </button>
+            )}
+            {task.status !== "done" && (
+              <button
+                onClick={() => setShowFunRating(true)}
+                className="flex-1 rounded-lg border border-emerald-200 bg-emerald-50 py-1.5 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 transition-colors"
+              >
+                Complete
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )
