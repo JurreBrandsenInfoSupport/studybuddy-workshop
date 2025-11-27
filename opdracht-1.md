@@ -209,7 +209,7 @@ Voor terugkerende taken (zoals het maken van issues) kun je **prompt files** geb
 
 ### Stap 8: Maak een prompt file
 
-1. Maak het bestand `.github/prompts/create-task.md` aan
+1. Maak het bestand `.github/prompts/create-task.prompt.md` aan
 2. Voeg deze professionele prompt template toe:
 
 ```markdown
