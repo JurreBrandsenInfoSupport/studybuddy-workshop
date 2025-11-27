@@ -180,7 +180,7 @@ describe("Database", () => {
     it("should reset the next id counter", () => {
       db.createTask({ title: "Test", subject: "Test", estimatedMinutes: 30, difficulty: "medium" });
       db.reset();
-      
+
       const newTask = db.createTask({ title: "Test", subject: "Test", estimatedMinutes: 30, difficulty: "medium" });
       expect(newTask.id).toBe("5");
     });

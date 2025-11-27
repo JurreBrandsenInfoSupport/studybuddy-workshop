@@ -78,7 +78,7 @@ describe('StudyDashboard', () => {
   it('should allow retrying after error', async () => {
     mockFetchTasks.mockRejectedValueOnce(new Error('Network error'))
     mockFetchTasks.mockResolvedValueOnce(mockTasks)
-    
+
     render(<StudyDashboard />)
 
     await waitFor(() => {
@@ -127,7 +127,7 @@ describe('StudyDashboard', () => {
       const text = btn.textContent || ''
       return text === 'To Do' || (text.includes('To Do') && btn.closest('div')?.className.includes('border-b'))
     })
-    
+
     if (todoFilterButton) {
       await user.click(todoFilterButton)
     }
@@ -153,9 +153,9 @@ describe('StudyDashboard', () => {
     const getTaskTitles = () => {
       const allHeadings = screen.getAllByRole('heading', { level: 3 })
       // Filter out the "Your Progress" heading and other non-task headings
-      return allHeadings.filter(h => 
-        h.textContent === 'Study Math' || 
-        h.textContent === 'Read Science Chapter' || 
+      return allHeadings.filter(h =>
+        h.textContent === 'Study Math' ||
+        h.textContent === 'Read Science Chapter' ||
         h.textContent === 'Complete History Essay'
       )
     }
@@ -181,7 +181,7 @@ describe('StudyDashboard', () => {
   it('should create a new task', async () => {
     const user = userEvent.setup()
     mockFetchTasks.mockResolvedValue([])
-    
+
     const newTask: StudyTask = {
       id: '4',
       title: 'New Task',
@@ -224,7 +224,7 @@ describe('StudyDashboard', () => {
   it('should update task status', async () => {
     const user = userEvent.setup()
     mockFetchTasks.mockResolvedValue([mockTasks[0]])
-    
+
     const updatedTask = { ...mockTasks[0], status: 'in-progress' as TaskStatus }
     mockUpdateTaskStatus.mockResolvedValue(updatedTask)
 
@@ -245,7 +245,7 @@ describe('StudyDashboard', () => {
   it('should delete a task', async () => {
     const user = userEvent.setup()
     global.confirm = jest.fn(() => true)
-    
+
     mockFetchTasks.mockResolvedValue([mockTasks[0]])
     mockDeleteTask.mockResolvedValue()
 
@@ -290,7 +290,7 @@ describe('StudyDashboard', () => {
       const text = btn.textContent || ''
       return text === 'Done' && !btn.textContent?.includes('Tasks Done')
     })
-    
+
     if (doneFilterButton) {
       await user.click(doneFilterButton)
     }
@@ -308,10 +308,10 @@ describe('StudyDashboard', () => {
     await waitFor(() => {
       expect(screen.getByText('Study Math')).toBeInTheDocument()
     })
-    
+
     // Check that the Your Progress section exists
     expect(screen.getByText('Your Progress')).toBeInTheDocument()
-    
+
     // Check that progress section has the expected structure with status labels
     const allElements = screen.getAllByText(/To Do|In Progress|Completed/)
     expect(allElements.length).toBeGreaterThan(0)
