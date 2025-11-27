@@ -102,7 +102,7 @@ We gaan gebruik maken van een speciale plan-prompt. Deze is zo geschreven dat he
 Bekijk de plan-prompt hieronder en beantwoord de volgende vragen:
 
 <details>
-<summary><strong>📄 plan-prompt.md</strong> (klik om uit te klappen)</summary>
+<summary><strong>plan-prompt.md</strong> (klik om uit te klappen)</summary>
 
 ```markdown
 # Generate Requirements Document
