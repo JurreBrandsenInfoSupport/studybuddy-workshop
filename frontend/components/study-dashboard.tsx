@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import type { StudyTask, FilterType, SortDirection, CreateTaskInput, TaskStatus } from "@/lib/types"
+import type { StudyTask, FilterType, SortDirection, CreateTaskInput, TaskStatus, FunRating } from "@/lib/types"
 import { fetchTasks, createTask, updateTaskStatus, deleteTask } from "@/lib/api"
 import { TaskCard } from "./task-card"
 import { AddTaskForm } from "./add-task-form"
@@ -47,10 +47,12 @@ export function StudyDashboard() {
     }
   }
 
-  const handleStatusChange = async (id: string, newStatus: TaskStatus) => {
+  const handleStatusChange = async (id: string, newStatus: TaskStatus, funRating?: FunRating) => {
     setUpdatingTaskIds((prev) => new Set(prev).add(id))
     try {
-      const updatedTask = await updateTaskStatus(id, newStatus)
+      const updatedTask = funRating !== undefined 
+        ? await updateTaskStatus(id, newStatus, funRating)
+        : await updateTaskStatus(id, newStatus)
       setTasks((prev) => prev.map((t) => (t.id === id ? updatedTask : t)))
     } catch (err) {
       console.error(err)

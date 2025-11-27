@@ -122,6 +122,38 @@ describe('API Module', () => {
       expect(task).toEqual(mockResponse)
     })
 
+    it('should update task status with funRating', async () => {
+      const taskId = '1'
+      const newStatus: TaskStatus = 'done'
+      const funRating = 5
+
+      const mockResponse = {
+        id: taskId,
+        title: 'Study Math',
+        subject: 'Math',
+        estimatedMinutes: 60,
+        status: newStatus,
+        funRating: funRating,
+        createdAt: '2024-01-01T00:00:00Z',
+      }
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockResponse,
+      } as Response)
+
+      const task = await updateTaskStatus(taskId, newStatus, funRating)
+
+      expect(mockFetch).toHaveBeenCalledWith('http://localhost:3001/api/tasks/1', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: newStatus, funRating: funRating }),
+      })
+      expect(task).toEqual(mockResponse)
+    })
+
     it('should throw error when update fails', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,

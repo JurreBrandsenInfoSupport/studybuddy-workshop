@@ -1,4 +1,4 @@
-import type { StudyTask, CreateTaskInput, TaskStatus } from "./types"
+import type { StudyTask, CreateTaskInput, TaskStatus, FunRating } from "./types"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
 
@@ -28,13 +28,18 @@ export async function createTask(input: CreateTaskInput): Promise<StudyTask> {
   return res.json()
 }
 
-export async function updateTaskStatus(id: string, status: TaskStatus): Promise<StudyTask> {
+export async function updateTaskStatus(id: string, status: TaskStatus, funRating?: FunRating): Promise<StudyTask> {
+  const body: { status: TaskStatus; funRating?: FunRating } = { status }
+  if (funRating !== undefined) {
+    body.funRating = funRating
+  }
+
   const res = await fetch(`${API_BASE_URL}/api/tasks/${id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ status }),
+    body: JSON.stringify(body),
   })
   
   if (!res.ok) {
