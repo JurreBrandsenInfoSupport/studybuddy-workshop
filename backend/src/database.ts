@@ -37,6 +37,7 @@ const INITIAL_TASKS: StudyTask[] = [
     status: "done",
     difficulty: "medium",
     createdAt: new Date(Date.now() - 259200000).toISOString(),
+    funRating: 4,
   },
 ];
 

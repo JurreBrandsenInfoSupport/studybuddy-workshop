@@ -47,10 +47,10 @@ export function StudyDashboard() {
     }
   }
 
-  const handleStatusChange = async (id: string, newStatus: TaskStatus) => {
+  const handleStatusChange = async (id: string, newStatus: TaskStatus, funRating?: number) => {
     setUpdatingTaskIds((prev) => new Set(prev).add(id))
     try {
-      const updatedTask = await updateTaskStatus(id, newStatus)
+      const updatedTask = await updateTaskStatus(id, newStatus, funRating)
       setTasks((prev) => prev.map((t) => (t.id === id ? updatedTask : t)))
     } catch (err) {
       console.error(err)
