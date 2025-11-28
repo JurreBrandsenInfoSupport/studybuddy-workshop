@@ -61,7 +61,7 @@ app.MapGet("/api/tasks/{id}", (string id, ITaskService taskService) =>
 .WithOpenApi();
 
 // Create a new task
-app.MapPost("/api/tasks", async ([FromBody] CreateTaskRequest request, ITaskService taskService) =>
+app.MapPost("/api/tasks", ([FromBody] CreateTaskRequest request, ITaskService taskService) =>
 {
     // Validate required fields
     if (string.IsNullOrWhiteSpace(request.Title) || 
@@ -77,7 +77,7 @@ app.MapPost("/api/tasks", async ([FromBody] CreateTaskRequest request, ITaskServ
 .WithOpenApi();
 
 // Update task status
-app.MapPatch("/api/tasks/{id}", async ([FromRoute] string id, [FromBody] UpdateTaskStatusRequest request, ITaskService taskService) =>
+app.MapPatch("/api/tasks/{id}", ([FromRoute] string id, [FromBody] UpdateTaskStatusRequest request, ITaskService taskService) =>
 {
     // Validate status
     if (string.IsNullOrWhiteSpace(request.Status) || 

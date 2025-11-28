@@ -62,10 +62,10 @@ backend/
    dotnet run
    ```
 
-   The API will be available at http://localhost:5000 (or https://localhost:5001)
+   The API will be available at http://localhost:5228 (default development port)
 
 4. **Access Swagger UI:**
-   Open http://localhost:5000/swagger in your browser
+   Open http://localhost:5228/swagger in your browser
 
 ### Testing
 
