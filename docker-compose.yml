@@ -6,7 +6,8 @@ services:
     ports:
       - "3001:3001"
     environment:
-      - PORT=3001
+      - ASPNETCORE_URLS=http://+:3001
+      - ASPNETCORE_ENVIRONMENT=Development
 
   frontend:
     build:
