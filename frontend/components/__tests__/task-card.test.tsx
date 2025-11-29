@@ -6,6 +6,7 @@ import type { StudyTask, TaskStatus } from '@/lib/types'
 describe('TaskCard', () => {
   const mockOnStatusChange = jest.fn()
   const mockOnDelete = jest.fn()
+  const mockOnTimerUpdate = jest.fn()
 
   const baseMockTask: StudyTask = {
     id: '1',
@@ -14,11 +15,14 @@ describe('TaskCard', () => {
     estimatedMinutes: 60,
     status: 'todo',
     createdAt: '2024-01-01T00:00:00Z',
+    actualMinutes: 0,
+    timerSessions: [],
   }
 
   beforeEach(() => {
     mockOnStatusChange.mockClear()
     mockOnDelete.mockClear()
+    mockOnTimerUpdate.mockClear()
   })
 
   it('should render task information correctly', () => {
@@ -27,6 +31,7 @@ describe('TaskCard', () => {
         task={baseMockTask}
         onStatusChange={mockOnStatusChange}
         onDelete={mockOnDelete}
+        onTimerUpdate={mockOnTimerUpdate}
         isUpdating={false}
       />
     )
@@ -43,6 +48,7 @@ describe('TaskCard', () => {
         task={baseMockTask}
         onStatusChange={mockOnStatusChange}
         onDelete={mockOnDelete}
+        onTimerUpdate={mockOnTimerUpdate}
         isUpdating={false}
       />
     )
@@ -57,6 +63,7 @@ describe('TaskCard', () => {
         task={inProgressTask}
         onStatusChange={mockOnStatusChange}
         onDelete={mockOnDelete}
+        onTimerUpdate={mockOnTimerUpdate}
         isUpdating={false}
       />
     )
@@ -71,6 +78,7 @@ describe('TaskCard', () => {
         task={doneTask}
         onStatusChange={mockOnStatusChange}
         onDelete={mockOnDelete}
+        onTimerUpdate={mockOnTimerUpdate}
         isUpdating={false}
       />
     )
@@ -84,6 +92,7 @@ describe('TaskCard', () => {
         task={baseMockTask}
         onStatusChange={mockOnStatusChange}
         onDelete={mockOnDelete}
+        onTimerUpdate={mockOnTimerUpdate}
         isUpdating={false}
       />
     )
@@ -100,6 +109,7 @@ describe('TaskCard', () => {
         task={inProgressTask}
         onStatusChange={mockOnStatusChange}
         onDelete={mockOnDelete}
+        onTimerUpdate={mockOnTimerUpdate}
         isUpdating={false}
       />
     )
@@ -116,6 +126,7 @@ describe('TaskCard', () => {
         task={doneTask}
         onStatusChange={mockOnStatusChange}
         onDelete={mockOnDelete}
+        onTimerUpdate={mockOnTimerUpdate}
         isUpdating={false}
       />
     )
@@ -131,6 +142,7 @@ describe('TaskCard', () => {
         task={baseMockTask}
         onStatusChange={mockOnStatusChange}
         onDelete={mockOnDelete}
+        onTimerUpdate={mockOnTimerUpdate}
         isUpdating={false}
       />
     )
@@ -146,6 +158,7 @@ describe('TaskCard', () => {
         task={baseMockTask}
         onStatusChange={mockOnStatusChange}
         onDelete={mockOnDelete}
+        onTimerUpdate={mockOnTimerUpdate}
         isUpdating={false}
       />
     )
@@ -162,6 +175,7 @@ describe('TaskCard', () => {
         task={baseMockTask}
         onStatusChange={mockOnStatusChange}
         onDelete={mockOnDelete}
+        onTimerUpdate={mockOnTimerUpdate}
         isUpdating={false}
       />
     )
@@ -181,6 +195,7 @@ describe('TaskCard', () => {
         task={baseMockTask}
         onStatusChange={mockOnStatusChange}
         onDelete={mockOnDelete}
+        onTimerUpdate={mockOnTimerUpdate}
         isUpdating={false}
       />
     )
@@ -198,6 +213,7 @@ describe('TaskCard', () => {
         task={doneTask}
         onStatusChange={mockOnStatusChange}
         onDelete={mockOnDelete}
+        onTimerUpdate={mockOnTimerUpdate}
         isUpdating={false}
       />
     )
@@ -212,6 +228,7 @@ describe('TaskCard', () => {
         task={baseMockTask}
         onStatusChange={mockOnStatusChange}
         onDelete={mockOnDelete}
+        onTimerUpdate={mockOnTimerUpdate}
         isUpdating={true}
       />
     )

@@ -21,6 +21,8 @@ describe('StudyDashboard', () => {
       estimatedMinutes: 60,
       status: 'todo',
       createdAt: '2024-01-01T00:00:00Z',
+      actualMinutes: 0,
+      timerSessions: [],
     },
     {
       id: '2',
@@ -29,6 +31,8 @@ describe('StudyDashboard', () => {
       estimatedMinutes: 45,
       status: 'in-progress',
       createdAt: '2024-01-01T01:00:00Z',
+      actualMinutes: 0,
+      timerSessions: [],
     },
     {
       id: '3',
@@ -37,6 +41,8 @@ describe('StudyDashboard', () => {
       estimatedMinutes: 90,
       status: 'done',
       createdAt: '2024-01-01T02:00:00Z',
+      actualMinutes: 0,
+      timerSessions: [],
     },
   ]
 
@@ -186,6 +192,8 @@ describe('StudyDashboard', () => {
       estimatedMinutes: 30,
       status: 'todo',
       createdAt: '2024-01-01T03:00:00Z',
+      actualMinutes: 0,
+      timerSessions: [],
     }
     mockCreateTask.mockResolvedValue(newTask)
 
