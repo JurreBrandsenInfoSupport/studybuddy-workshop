@@ -2,9 +2,6 @@
 
 A student task manager application with a Next.js frontend and .NET 8.0 backend.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/jurrebrandseninfosupports-projects/v0-study-buddy-app)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/un0TbX7m7YV)
-
 ## Project Structure
 
 ```
@@ -159,7 +156,7 @@ npm run test:coverage
 ### For Backend Development
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) or later
 
-### For Frontend Development  
+### For Frontend Development
 - Node.js 18+ and pnpm
 
 ### For Docker
