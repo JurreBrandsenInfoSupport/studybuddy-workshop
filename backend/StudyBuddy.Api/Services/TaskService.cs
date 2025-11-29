@@ -10,6 +10,12 @@ public interface ITaskService
     StudyTask? UpdateTask(string id, StudyTaskStatus status);
     bool DeleteTask(string id);
     void Reset();
+
+    // Timer methods
+    TimerSession StartTimer(string taskId, TimerMode mode);
+    TimerSession? StopTimer(string taskId);
+    TimerSession? GetActiveTimer(string taskId);
+    IEnumerable<TimerSession> GetTaskSessions(string taskId);
 }
 
 public class InMemoryTaskService : ITaskService
@@ -17,6 +23,11 @@ public class InMemoryTaskService : ITaskService
     private List<StudyTask> _tasks;
     private int _nextId;
     private readonly object _lock = new();
+
+    // Timer-related storage
+    private Dictionary<string, TimerSession> _activeTimers = new();
+    private List<TimerSession> _timerSessions = new();
+    private int _nextSessionId = 1;
 
     public InMemoryTaskService()
     {
@@ -134,6 +145,78 @@ public class InMemoryTaskService : ITaskService
         {
             _tasks = GetInitialTasks();
             _nextId = 5;
+            _activeTimers.Clear();
+            _timerSessions.Clear();
+            _nextSessionId = 1;
+        }
+    }
+
+    public TimerSession StartTimer(string taskId, TimerMode mode)
+    {
+        lock (_lock)
+        {
+            var task = GetTaskById(taskId);
+            if (task == null)
+                throw new InvalidOperationException("Task not found");
+
+            // Stop any existing active timer for this task
+            if (_activeTimers.ContainsKey(taskId))
+            {
+                StopTimer(taskId);
+            }
+
+            var session = new TimerSession
+            {
+                Id = _nextSessionId++.ToString(),
+                TaskId = taskId,
+                StartedAt = DateTime.UtcNow,
+                Mode = mode,
+                DurationSeconds = 0
+            };
+
+            _activeTimers[taskId] = session;
+            _timerSessions.Add(session);
+            task.TimerSessions.Add(session);
+
+            return session;
+        }
+    }
+
+    public TimerSession? StopTimer(string taskId)
+    {
+        lock (_lock)
+        {
+            if (!_activeTimers.TryGetValue(taskId, out var session))
+                return null;
+
+            session.EndedAt = DateTime.UtcNow;
+            session.DurationSeconds = (int)(session.EndedAt.Value - session.StartedAt).TotalSeconds;
+
+            // Update task's actual minutes (round up to ensure we count partial minutes)
+            var task = GetTaskById(taskId);
+            if (task != null)
+            {
+                task.ActualMinutes += (int)Math.Ceiling(session.DurationSeconds / 60.0);
+            }
+
+            _activeTimers.Remove(taskId);
+            return session;
+        }
+    }
+
+    public TimerSession? GetActiveTimer(string taskId)
+    {
+        lock (_lock)
+        {
+            return _activeTimers.TryGetValue(taskId, out var session) ? session : null;
+        }
+    }
+
+    public IEnumerable<TimerSession> GetTaskSessions(string taskId)
+    {
+        lock (_lock)
+        {
+            return _timerSessions.Where(s => s.TaskId == taskId).ToList();
         }
     }
 }

@@ -64,7 +64,7 @@ app.MapGet("/api/tasks/{id}", (string id, ITaskService taskService) =>
 app.MapPost("/api/tasks", ([FromBody] CreateTaskRequest request, ITaskService taskService) =>
 {
     // Validate required fields
-    if (string.IsNullOrWhiteSpace(request.Title) || 
+    if (string.IsNullOrWhiteSpace(request.Title) ||
         string.IsNullOrWhiteSpace(request.Subject))
     {
         return Results.BadRequest(new { error = "Missing required fields" });
@@ -80,7 +80,7 @@ app.MapPost("/api/tasks", ([FromBody] CreateTaskRequest request, ITaskService ta
 app.MapPatch("/api/tasks/{id}", ([FromRoute] string id, [FromBody] UpdateTaskStatusRequest request, ITaskService taskService) =>
 {
     // Validate status
-    if (string.IsNullOrWhiteSpace(request.Status) || 
+    if (string.IsNullOrWhiteSpace(request.Status) ||
         !TaskStatusHelper.TryParseStatus(request.Status, out var status))
     {
         return Results.BadRequest(new { error = "Invalid status" });
@@ -109,6 +109,64 @@ app.MapDelete("/api/tasks/{id}", (string id, ITaskService taskService) =>
     return Results.NoContent();
 })
 .WithName("DeleteTask")
+.WithOpenApi();
+
+// Start timer
+app.MapPost("/api/tasks/{id}/timer/start", (
+    string id,
+    [FromBody] StartTimerRequest request,
+    ITaskService taskService) =>
+{
+    try
+    {
+        // Parse timer mode
+        if (!Enum.TryParse<TimerMode>(request.Mode, true, out var mode))
+        {
+            return Results.BadRequest(new { error = "Invalid timer mode. Use 'normal' or 'pomodoro'" });
+        }
+
+        var session = taskService.StartTimer(id, mode);
+        return Results.Ok(session.ToResponse());
+    }
+    catch (InvalidOperationException ex)
+    {
+        return Results.NotFound(new { error = ex.Message });
+    }
+})
+.WithName("StartTimer")
+.WithOpenApi();
+
+// Stop timer
+app.MapPost("/api/tasks/{id}/timer/stop", (string id, ITaskService taskService) =>
+{
+    var session = taskService.StopTimer(id);
+    if (session == null)
+        return Results.NotFound(new { error = "No active timer found" });
+
+    return Results.Ok(session.ToResponse());
+})
+.WithName("StopTimer")
+.WithOpenApi();
+
+// Get active timer
+app.MapGet("/api/tasks/{id}/timer/active", (string id, ITaskService taskService) =>
+{
+    var session = taskService.GetActiveTimer(id);
+    if (session == null)
+        return Results.NotFound();
+
+    return Results.Ok(session.ToResponse());
+})
+.WithName("GetActiveTimer")
+.WithOpenApi();
+
+// Get timer sessions
+app.MapGet("/api/tasks/{id}/timer/sessions", (string id, ITaskService taskService) =>
+{
+    var sessions = taskService.GetTaskSessions(id);
+    return Results.Ok(sessions.Select(s => s.ToResponse()));
+})
+.WithName("GetTimerSessions")
 .WithOpenApi();
 
 app.Run();

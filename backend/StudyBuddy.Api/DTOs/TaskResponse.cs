@@ -8,4 +8,6 @@ public class TaskResponse
     public int EstimatedMinutes { get; set; }
     public string Status { get; set; } = string.Empty;
     public string CreatedAt { get; set; } = string.Empty;
+    public int ActualMinutes { get; set; }
+    public List<TimerSessionResponse> TimerSessions { get; set; } = new();
 }

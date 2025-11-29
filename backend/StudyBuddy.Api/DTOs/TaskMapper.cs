@@ -14,7 +14,9 @@ public static class TaskMapper
             Subject = task.Subject,
             EstimatedMinutes = task.EstimatedMinutes,
             Status = task.Status.ToApiString(),
-            CreatedAt = task.CreatedAt.ToString("o") // ISO 8601 format
+            CreatedAt = task.CreatedAt.ToString("o"), // ISO 8601 format
+            ActualMinutes = task.ActualMinutes,
+            TimerSessions = task.TimerSessions.Select(s => s.ToResponse()).ToList()
         };
     }
 }

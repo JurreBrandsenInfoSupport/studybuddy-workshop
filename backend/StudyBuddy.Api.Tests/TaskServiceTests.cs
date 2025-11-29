@@ -262,4 +262,217 @@ public class TaskServiceTests
         // Assert
         newTask.Id.Should().Be("5");
     }
+
+    // Timer Tests
+
+    [Fact]
+    public void StartTimer_ShouldCreateNewTimerSession()
+    {
+        // Arrange
+        _service = new InMemoryTaskService();
+        var task = _service.GetTaskById("1");
+
+        // Act
+        var session = _service.StartTimer(task!.Id, TimerMode.Normal);
+
+        // Assert
+        session.Should().NotBeNull();
+        session.TaskId.Should().Be(task.Id);
+        session.Mode.Should().Be(TimerMode.Normal);
+        session.StartedAt.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
+        session.EndedAt.Should().BeNull();
+        session.DurationSeconds.Should().Be(0);
+    }
+
+    [Fact]
+    public void StartTimer_ShouldThrowException_WhenTaskDoesNotExist()
+    {
+        // Arrange
+        _service = new InMemoryTaskService();
+
+        // Act
+        var act = () => _service.StartTimer("999", TimerMode.Normal);
+
+        // Assert
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("Task not found");
+    }
+
+    [Fact]
+    public void StartTimer_ShouldStopExistingTimer_WhenTaskHasActiveTimer()
+    {
+        // Arrange
+        _service = new InMemoryTaskService();
+        var task = _service.GetTaskById("1");
+        var session1 = _service.StartTimer(task!.Id, TimerMode.Normal);
+        Thread.Sleep(100); // Small delay to ensure different start times
+
+        // Act
+        var session2 = _service.StartTimer(task.Id, TimerMode.Pomodoro);
+
+        // Assert
+        session1.Should().NotBeSameAs(session2);
+        session2.Mode.Should().Be(TimerMode.Pomodoro);
+        var activeTimer = _service.GetActiveTimer(task.Id);
+        activeTimer.Should().Be(session2);
+    }
+
+    [Fact]
+    public void StartTimer_ShouldAddSessionToTask()
+    {
+        // Arrange
+        _service = new InMemoryTaskService();
+        var task = _service.GetTaskById("1");
+
+        // Act
+        var session = _service.StartTimer(task!.Id, TimerMode.Pomodoro);
+
+        // Assert
+        var updatedTask = _service.GetTaskById(task.Id);
+        updatedTask!.TimerSessions.Should().Contain(session);
+    }
+
+    [Fact]
+    public void StopTimer_ShouldUpdateSessionWithEndTime()
+    {
+        // Arrange
+        _service = new InMemoryTaskService();
+        var task = _service.GetTaskById("1");
+        _service.StartTimer(task!.Id, TimerMode.Normal);
+        Thread.Sleep(1000); // Wait 1 second
+
+        // Act
+        var session = _service.StopTimer(task.Id);
+
+        // Assert
+        session.Should().NotBeNull();
+        session!.EndedAt.Should().NotBeNull();
+        session.DurationSeconds.Should().BeGreaterThanOrEqualTo(1);
+    }
+
+    [Fact]
+    public void StopTimer_ShouldUpdateTaskActualMinutes()
+    {
+        // Arrange
+        _service = new InMemoryTaskService();
+        var task = _service.GetTaskById("1");
+        var initialActualMinutes = task!.ActualMinutes;
+        _service.StartTimer(task.Id, TimerMode.Normal);
+        Thread.Sleep(2000); // Wait 2 seconds
+
+        // Act
+        _service.StopTimer(task.Id);
+
+        // Assert
+        var updatedTask = _service.GetTaskById(task.Id);
+        updatedTask!.ActualMinutes.Should().BeGreaterThan(initialActualMinutes);
+    }
+
+    [Fact]
+    public void StopTimer_ShouldReturnNull_WhenNoActiveTimer()
+    {
+        // Arrange
+        _service = new InMemoryTaskService();
+
+        // Act
+        var session = _service.StopTimer("1");
+
+        // Assert
+        session.Should().BeNull();
+    }
+
+    [Fact]
+    public void StopTimer_ShouldRemoveActiveTimer()
+    {
+        // Arrange
+        _service = new InMemoryTaskService();
+        var task = _service.GetTaskById("1");
+        _service.StartTimer(task!.Id, TimerMode.Normal);
+
+        // Act
+        _service.StopTimer(task.Id);
+
+        // Assert
+        var activeTimer = _service.GetActiveTimer(task.Id);
+        activeTimer.Should().BeNull();
+    }
+
+    [Fact]
+    public void GetActiveTimer_ShouldReturnActiveTimer_WhenTimerIsRunning()
+    {
+        // Arrange
+        _service = new InMemoryTaskService();
+        var task = _service.GetTaskById("1");
+        var session = _service.StartTimer(task!.Id, TimerMode.Pomodoro);
+
+        // Act
+        var activeTimer = _service.GetActiveTimer(task.Id);
+
+        // Assert
+        activeTimer.Should().Be(session);
+    }
+
+    [Fact]
+    public void GetActiveTimer_ShouldReturnNull_WhenNoActiveTimer()
+    {
+        // Arrange
+        _service = new InMemoryTaskService();
+
+        // Act
+        var activeTimer = _service.GetActiveTimer("1");
+
+        // Assert
+        activeTimer.Should().BeNull();
+    }
+
+    [Fact]
+    public void GetTaskSessions_ShouldReturnAllSessionsForTask()
+    {
+        // Arrange
+        _service = new InMemoryTaskService();
+        var task = _service.GetTaskById("1");
+        _service.StartTimer(task!.Id, TimerMode.Normal);
+        Thread.Sleep(100);
+        _service.StopTimer(task.Id);
+        _service.StartTimer(task.Id, TimerMode.Pomodoro);
+        _service.StopTimer(task.Id);
+
+        // Act
+        var sessions = _service.GetTaskSessions(task.Id).ToList();
+
+        // Assert
+        sessions.Should().HaveCount(2);
+        sessions.Should().AllSatisfy(s => s.TaskId.Should().Be(task.Id));
+    }
+
+    [Fact]
+    public void GetTaskSessions_ShouldReturnEmpty_WhenNoSessions()
+    {
+        // Arrange
+        _service = new InMemoryTaskService();
+
+        // Act
+        var sessions = _service.GetTaskSessions("1").ToList();
+
+        // Assert
+        sessions.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Reset_ShouldClearAllTimerData()
+    {
+        // Arrange
+        _service = new InMemoryTaskService();
+        var task = _service.GetTaskById("1");
+        _service.StartTimer(task!.Id, TimerMode.Normal);
+
+        // Act
+        _service.Reset();
+
+        // Assert
+        var activeTimer = _service.GetActiveTimer(task.Id);
+        activeTimer.Should().BeNull();
+        var sessions = _service.GetTaskSessions(task.Id).ToList();
+        sessions.Should().BeEmpty();
+    }
 }

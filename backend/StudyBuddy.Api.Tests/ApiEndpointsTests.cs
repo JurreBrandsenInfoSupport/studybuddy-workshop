@@ -115,7 +115,7 @@ public class ApiEndpointsTests : IClassFixture<WebApplicationFactory<Program>>, 
         task.EstimatedMinutes.Should().Be(newTask.EstimatedMinutes);
         task.Status.Should().Be("todo");
         task.CreatedAt.Should().NotBeNullOrEmpty();
-        
+
         response.Headers.Location.Should().NotBeNull();
         response.Headers.Location!.ToString().Should().Contain($"/api/tasks/{task.Id}");
     }
@@ -197,7 +197,7 @@ public class ApiEndpointsTests : IClassFixture<WebApplicationFactory<Program>>, 
         var updateRequest = new UpdateTaskStatusRequest { Status = "done" };
 
         // Act
-        var response = await _client.PatchAsync("/api/tasks/1", 
+        var response = await _client.PatchAsync("/api/tasks/1",
             JsonContent.Create(updateRequest));
 
         // Assert
@@ -306,7 +306,7 @@ public class ApiEndpointsTests : IClassFixture<WebApplicationFactory<Program>>, 
         var finalResponse = await _client.GetAsync("/api/tasks");
         var finalTasks = await finalResponse.Content.ReadFromJsonAsync<List<TaskResponse>>();
         finalTasks!.Count.Should().Be(initialCount - 1);
-        
+
         // Verify the specific task is gone
         finalTasks.Should().NotContain(t => t.Id == "1");
     }
@@ -361,5 +361,216 @@ public class ApiEndpointsTests : IClassFixture<WebApplicationFactory<Program>>, 
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         var task = await response.Content.ReadFromJsonAsync<TaskResponse>();
         task!.Title.Should().Be(newTask.Title);
+    }
+
+    // Timer Endpoint Tests
+
+    [Fact]
+    public async Task StartTimer_ShouldReturnTimerSession_WithNormalMode()
+    {
+        // Arrange
+        var request = new { mode = "normal" };
+
+        // Act
+        var response = await _client.PostAsJsonAsync("/api/tasks/1/timer/start", request);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var session = await response.Content.ReadFromJsonAsync<TimerSessionResponse>();
+        session.Should().NotBeNull();
+        session!.TaskId.Should().Be("1");
+        session.Mode.Should().Be("normal");
+        session.StartedAt.Should().NotBeNullOrEmpty();
+        session.EndedAt.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task StartTimer_ShouldReturnTimerSession_WithPomodoroMode()
+    {
+        // Arrange
+        var request = new { mode = "pomodoro" };
+
+        // Act
+        var response = await _client.PostAsJsonAsync("/api/tasks/1/timer/start", request);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var session = await response.Content.ReadFromJsonAsync<TimerSessionResponse>();
+        session.Should().NotBeNull();
+        session!.Mode.Should().Be("pomodoro");
+    }
+
+    [Fact]
+    public async Task StartTimer_ShouldReturn404_WhenTaskDoesNotExist()
+    {
+        // Arrange
+        var request = new { mode = "normal" };
+
+        // Act
+        var response = await _client.PostAsJsonAsync("/api/tasks/999/timer/start", request);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        var content = await response.Content.ReadAsStringAsync();
+        content.Should().Contain("Task not found");
+    }
+
+    [Fact]
+    public async Task StartTimer_ShouldReturn400_WithInvalidMode()
+    {
+        // Arrange
+        var request = new { mode = "invalid" };
+
+        // Act
+        var response = await _client.PostAsJsonAsync("/api/tasks/1/timer/start", request);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        var content = await response.Content.ReadAsStringAsync();
+        content.Should().Contain("Invalid timer mode");
+    }
+
+    [Fact]
+    public async Task StopTimer_ShouldReturnSession_WhenTimerIsActive()
+    {
+        // Arrange
+        var startRequest = new { mode = "normal" };
+        await _client.PostAsJsonAsync("/api/tasks/1/timer/start", startRequest);
+        await Task.Delay(1000); // Wait 1 second
+
+        // Act
+        var response = await _client.PostAsync("/api/tasks/1/timer/stop", null);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var session = await response.Content.ReadFromJsonAsync<TimerSessionResponse>();
+        session.Should().NotBeNull();
+        session!.EndedAt.Should().NotBeNullOrEmpty();
+        session.DurationSeconds.Should().BeGreaterThanOrEqualTo(1);
+    }
+
+    [Fact]
+    public async Task StopTimer_ShouldReturn404_WhenNoActiveTimer()
+    {
+        // Act
+        var response = await _client.PostAsync("/api/tasks/1/timer/stop", null);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        var content = await response.Content.ReadAsStringAsync();
+        content.Should().Contain("No active timer found");
+    }
+
+    [Fact]
+    public async Task StopTimer_ShouldUpdateTaskActualMinutes()
+    {
+        // Arrange
+        var startRequest = new { mode = "normal" };
+        await _client.PostAsJsonAsync("/api/tasks/1/timer/start", startRequest);
+        await Task.Delay(2000); // Wait 2 seconds
+
+        // Act
+        await _client.PostAsync("/api/tasks/1/timer/stop", null);
+
+        // Assert
+        var taskResponse = await _client.GetAsync("/api/tasks/1");
+        var task = await taskResponse.Content.ReadFromJsonAsync<TaskResponse>();
+        task!.ActualMinutes.Should().BeGreaterThan(0);
+    }
+
+    [Fact]
+    public async Task GetActiveTimer_ShouldReturnSession_WhenTimerIsRunning()
+    {
+        // Arrange
+        var startRequest = new { mode = "pomodoro" };
+        await _client.PostAsJsonAsync("/api/tasks/1/timer/start", startRequest);
+
+        // Act
+        var response = await _client.GetAsync("/api/tasks/1/timer/active");
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var session = await response.Content.ReadFromJsonAsync<TimerSessionResponse>();
+        session.Should().NotBeNull();
+        session!.TaskId.Should().Be("1");
+    }
+
+    [Fact]
+    public async Task GetActiveTimer_ShouldReturn404_WhenNoActiveTimer()
+    {
+        // Act
+        var response = await _client.GetAsync("/api/tasks/1/timer/active");
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task GetTimerSessions_ShouldReturnAllSessionsForTask()
+    {
+        // Arrange
+        var startRequest = new { mode = "normal" };
+        await _client.PostAsJsonAsync("/api/tasks/1/timer/start", startRequest);
+        await Task.Delay(100);
+        await _client.PostAsync("/api/tasks/1/timer/stop", null);
+        await _client.PostAsJsonAsync("/api/tasks/1/timer/start", new { mode = "pomodoro" });
+        await Task.Delay(100);
+        await _client.PostAsync("/api/tasks/1/timer/stop", null);
+
+        // Act
+        var response = await _client.GetAsync("/api/tasks/1/timer/sessions");
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var sessions = await response.Content.ReadFromJsonAsync<List<TimerSessionResponse>>();
+        sessions.Should().NotBeNull();
+        sessions.Should().HaveCount(2);
+        sessions.Should().AllSatisfy(s => s.TaskId.Should().Be("1"));
+    }
+
+    [Fact]
+    public async Task GetTimerSessions_ShouldReturnEmpty_WhenNoSessions()
+    {
+        // Act
+        var response = await _client.GetAsync("/api/tasks/1/timer/sessions");
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var sessions = await response.Content.ReadFromJsonAsync<List<TimerSessionResponse>>();
+        sessions.Should().NotBeNull();
+        sessions.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task TimerWorkflow_ShouldWorkEndToEnd()
+    {
+        // Arrange - Start timer
+        var startRequest = new { mode = "pomodoro" };
+        var startResponse = await _client.PostAsJsonAsync("/api/tasks/1/timer/start", startRequest);
+        startResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        // Check active timer
+        var activeResponse = await _client.GetAsync("/api/tasks/1/timer/active");
+        activeResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        // Wait and stop
+        await Task.Delay(1500);
+        var stopResponse = await _client.PostAsync("/api/tasks/1/timer/stop", null);
+        stopResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        // Verify no active timer
+        var noActiveResponse = await _client.GetAsync("/api/tasks/1/timer/active");
+        noActiveResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+        // Verify sessions were recorded
+        var sessionsResponse = await _client.GetAsync("/api/tasks/1/timer/sessions");
+        var sessions = await sessionsResponse.Content.ReadFromJsonAsync<List<TimerSessionResponse>>();
+        sessions.Should().HaveCount(1);
+
+        // Verify task actual minutes updated
+        var taskResponse = await _client.GetAsync("/api/tasks/1");
+        var task = await taskResponse.Content.ReadFromJsonAsync<TaskResponse>();
+        task!.ActualMinutes.Should().BeGreaterThan(0);
+        task.TimerSessions.Should().HaveCount(1);
     }
 }
