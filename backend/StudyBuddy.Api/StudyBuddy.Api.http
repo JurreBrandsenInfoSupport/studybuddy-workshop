@@ -1,0 +1,43 @@
+@StudyBuddy.Api_HostAddress = http://localhost:5228
+
+### Health Check
+GET {{StudyBuddy.Api_HostAddress}}/health
+
+###
+
+### Get all tasks
+GET {{StudyBuddy.Api_HostAddress}}/api/tasks
+
+###
+
+### Get task by ID
+GET {{StudyBuddy.Api_HostAddress}}/api/tasks/1
+
+###
+
+### Create a new task
+POST {{StudyBuddy.Api_HostAddress}}/api/tasks
+Content-Type: application/json
+
+{
+  "title": "Complete Math Homework",
+  "subject": "Mathematics",
+  "estimatedMinutes": 60
+}
+
+###
+
+### Update task status
+PATCH {{StudyBuddy.Api_HostAddress}}/api/tasks/1
+Content-Type: application/json
+
+{
+  "status": "done"
+}
+
+###
+
+### Delete a task
+DELETE {{StudyBuddy.Api_HostAddress}}/api/tasks/1
+
+###

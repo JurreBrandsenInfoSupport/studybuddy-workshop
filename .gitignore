@@ -6,3 +6,10 @@ node_modules
 dist
 .next
 coverage
+backend-nodejs
+bin
+obj
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
