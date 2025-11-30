@@ -1,15 +1,17 @@
 "use client"
 import type { StudyTask, TaskStatus } from "@/lib/types"
 import { Clock, BookOpen, Trash2 } from "lucide-react"
+import { TaskTimer } from "./task-timer"
 
 interface TaskCardProps {
   task: StudyTask
   onStatusChange: (id: string, status: TaskStatus) => Promise<void>
   onDelete: (id: string) => Promise<void>
+  onTimerUpdate: (taskId: string) => void
   isUpdating: boolean
 }
 
-export function TaskCard({ task, onStatusChange, onDelete, isUpdating }: TaskCardProps) {
+export function TaskCard({ task, onStatusChange, onDelete, onTimerUpdate, isUpdating }: TaskCardProps) {
   const statusColors = {
     todo: "bg-white border-slate-200 hover:border-indigo-300",
     "in-progress": "bg-blue-50/50 border-blue-200 hover:border-blue-300",
@@ -94,6 +96,9 @@ export function TaskCard({ task, onStatusChange, onDelete, isUpdating }: TaskCar
           )}
         </div>
       </div>
+
+      {/* Timer */}
+      <TaskTimer task={task} onTimerUpdate={onTimerUpdate} />
     </div>
   )
 }

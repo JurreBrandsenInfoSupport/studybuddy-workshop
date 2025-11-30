@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import type { StudyTask, FilterType, SortDirection, CreateTaskInput, TaskStatus } from "@/lib/types"
-import { fetchTasks, createTask, updateTaskStatus, deleteTask } from "@/lib/api"
+import { fetchTasks, createTask, updateTaskStatus, deleteTask, fetchTaskById } from "@/lib/api"
 import { TaskCard } from "./task-card"
 import { AddTaskForm } from "./add-task-form"
 import { TaskFilters } from "./task-filters"
@@ -75,6 +75,15 @@ export function StudyDashboard() {
         next.delete(id)
         return next
       })
+    }
+  }
+
+  const handleTimerUpdate = async (taskId: string) => {
+    try {
+      const updatedTask = await fetchTaskById(taskId)
+      setTasks((prev) => prev.map((t) => (t.id === taskId ? updatedTask : t)))
+    } catch (error) {
+      console.error("Failed to refresh task:", error)
     }
   }
 
@@ -232,6 +241,7 @@ export function StudyDashboard() {
                     task={task}
                     onStatusChange={handleStatusChange}
                     onDelete={handleDelete}
+                    onTimerUpdate={handleTimerUpdate}
                     isUpdating={updatingTaskIds.has(task.id)}
                   />
                 ))}
