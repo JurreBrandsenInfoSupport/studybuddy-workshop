@@ -4,6 +4,28 @@
 
 ---
 
+## Table of Contents
+
+1. [Overview](#1-overview)
+2. [Test Objectives & Strategy](#2-test-objectives--strategy)
+3. [Test Scope](#3-test-scope)
+4. [Test Types & Coverage](#4-test-types--coverage)
+   - [4.1 Unit Tests](#41-unit-tests)
+   - [4.2 Integration Tests](#42-integration-tests)
+   - [4.3 API Integration Tests](#43-api-integration-tests)
+   - [4.4 End-to-End / Manual Tests](#44-end-to-end--manual-tests)
+5. [Test Data Strategy](#5-test-data-strategy)
+6. [Execution Instructions](#6-execution-instructions)
+7. [Entry & Exit Criteria](#7-entry--exit-criteria)
+8. [Detailed Test Cases](#8-detailed-test-cases)
+9. [Traceability Matrix](#9-traceability-matrix)
+10. [Risk Assessment & Mitigation](#10-risk-assessment--mitigation)
+11. [Known Issues & Limitations](#11-known-issues--limitations)
+12. [Success Criteria Summary](#12-success-criteria-summary)
+13. [References & Resources](#13-references--resources)
+
+---
+
 ## 1. Overview
 
 ### Feature / Change Name
