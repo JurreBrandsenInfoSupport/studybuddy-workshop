@@ -40,7 +40,7 @@ instructions in the requirements document completely.
 ### 4. Validate
 
 - Run each validation gate specified in the requirements document
-- Execute all test commands (e.g., `mvn verify`, or `npm test`)
+- Execute all test commands (e.g., `dotnet test`, or `npm test`)
 - Run linting and code quality checks
 - Perform any performance benchmarks if applicable
 - Fix any failures that occur
