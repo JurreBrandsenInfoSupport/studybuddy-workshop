@@ -111,6 +111,74 @@ app.MapDelete("/api/tasks/{id}", (string id, ITaskService taskService) =>
 .WithName("DeleteTask")
 .WithOpenApi();
 
+// Start timer session
+app.MapPost("/api/tasks/{id}/timer/start", (
+    [FromRoute] string id,
+    [FromBody] StartTimerRequest request,
+    ITaskService taskService) =>
+{
+    if (!SessionTypeHelper.TryParseSessionType(request.SessionType, out var sessionType))
+    {
+        return Results.BadRequest(new { error = "Invalid session type. Must be 'work', 'short-break', or 'long-break'" });
+    }
+
+    var task = taskService.GetTaskById(id);
+    if (task == null)
+    {
+        return Results.NotFound(new { error = "Task not found" });
+    }
+
+    taskService.StartTimerSession(id, sessionType);
+    return Results.Ok(new { message = "Timer session started" });
+})
+.WithName("StartTimerSession")
+.WithOpenApi();
+
+// Complete timer session
+app.MapPost("/api/tasks/{id}/timer/complete", (
+    [FromRoute] string id,
+    [FromBody] CompleteTimerRequest request,
+    ITaskService taskService) =>
+{
+    if (!SessionTypeHelper.TryParseSessionType(request.SessionType, out var sessionType))
+    {
+        return Results.BadRequest(new { error = "Invalid session type" });
+    }
+
+    if (request.DurationMinutes <= 0 || request.DurationMinutes > 180)
+    {
+        return Results.BadRequest(new { error = "Duration must be between 1 and 180 minutes" });
+    }
+
+    var task = taskService.GetTaskById(id);
+    if (task == null)
+    {
+        return Results.NotFound(new { error = "Task not found" });
+    }
+
+    taskService.CompleteTimerSession(id, sessionType, request.DurationMinutes);
+    return Results.Ok(new { message = "Timer session completed" });
+})
+.WithName("CompleteTimerSession")
+.WithOpenApi();
+
+// Get timer stats
+app.MapGet("/api/tasks/{id}/timer/stats", (
+    [FromRoute] string id,
+    ITaskService taskService) =>
+{
+    var task = taskService.GetTaskById(id);
+    if (task == null)
+    {
+        return Results.NotFound(new { error = "Task not found" });
+    }
+
+    var stats = taskService.GetTimerStats(id);
+    return Results.Ok(stats);
+})
+.WithName("GetTimerStats")
+.WithOpenApi();
+
 app.Run();
 
 // Make the implicit Program class public for testing

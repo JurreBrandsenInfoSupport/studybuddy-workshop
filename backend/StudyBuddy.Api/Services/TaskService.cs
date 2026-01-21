@@ -1,4 +1,6 @@
 using StudyBuddy.Api.Models;
+using StudyBuddy.Api.DTOs;
+using StudyBuddy.Api.Helpers;
 
 namespace StudyBuddy.Api.Services;
 
@@ -10,12 +12,16 @@ public interface ITaskService
     StudyTask? UpdateTask(string id, StudyTaskStatus status);
     bool DeleteTask(string id);
     void Reset();
+    void StartTimerSession(string taskId, SessionType sessionType);
+    void CompleteTimerSession(string taskId, SessionType sessionType, int durationMinutes);
+    TimerStatsResponse GetTimerStats(string taskId);
 }
 
 public class InMemoryTaskService : ITaskService
 {
     private List<StudyTask> _tasks;
     private int _nextId;
+    private int _nextSessionId = 1;
     private readonly object _lock = new();
 
     public InMemoryTaskService()
@@ -134,6 +140,111 @@ public class InMemoryTaskService : ITaskService
         {
             _tasks = GetInitialTasks();
             _nextId = 5;
+        }
+    }
+
+    public void StartTimerSession(string taskId, SessionType sessionType)
+    {
+        lock (_lock)
+        {
+            var task = _tasks.FirstOrDefault(t => t.Id == taskId);
+            if (task == null) return;
+
+            var session = new PomodoroSession
+            {
+                Id = _nextSessionId.ToString(),
+                TaskId = taskId,
+                SessionType = sessionType,
+                StartedAt = DateTime.UtcNow,
+                CompletedAt = DateTime.MinValue, // Not completed yet
+                DurationMinutes = 0
+            };
+
+            task.Sessions.Add(session);
+            _nextSessionId++;
+        }
+    }
+
+    public void CompleteTimerSession(string taskId, SessionType sessionType, int durationMinutes)
+    {
+        lock (_lock)
+        {
+            var task = _tasks.FirstOrDefault(t => t.Id == taskId);
+            if (task == null) return;
+
+            // Find the most recent incomplete session of this type
+            var session = task.Sessions
+                .Where(s => s.TaskId == taskId &&
+                           s.SessionType == sessionType &&
+                           s.CompletedAt == DateTime.MinValue)
+                .OrderByDescending(s => s.StartedAt)
+                .FirstOrDefault();
+
+            if (session != null)
+            {
+                session.CompletedAt = DateTime.UtcNow;
+                session.DurationMinutes = durationMinutes;
+            }
+            else
+            {
+                // No session was started - create and complete in one go
+                session = new PomodoroSession
+                {
+                    Id = _nextSessionId.ToString(),
+                    TaskId = taskId,
+                    SessionType = sessionType,
+                    StartedAt = DateTime.UtcNow.AddMinutes(-durationMinutes),
+                    CompletedAt = DateTime.UtcNow,
+                    DurationMinutes = durationMinutes
+                };
+                task.Sessions.Add(session);
+                _nextSessionId++;
+            }
+
+            // Update aggregated stats (only count work sessions for pomodoros)
+            if (sessionType == SessionType.Work)
+            {
+                task.TotalPomodoros++;
+                task.TotalFocusMinutes += durationMinutes;
+            }
+        }
+    }
+
+    public TimerStatsResponse GetTimerStats(string taskId)
+    {
+        lock (_lock)
+        {
+            var task = _tasks.FirstOrDefault(t => t.Id == taskId);
+            if (task == null)
+            {
+                return new TimerStatsResponse
+                {
+                    TotalPomodoros = 0,
+                    TotalFocusMinutes = 0,
+                    RecentSessions = new List<SessionDto>()
+                };
+            }
+
+            var recentSessions = task.Sessions
+                .Where(s => s.CompletedAt != DateTime.MinValue)
+                .OrderByDescending(s => s.CompletedAt)
+                .Take(10)
+                .Select(s => new SessionDto
+                {
+                    Id = s.Id,
+                    SessionType = s.SessionType.ToApiString(),
+                    StartedAt = s.StartedAt.ToString("o"),
+                    CompletedAt = s.CompletedAt.ToString("o"),
+                    DurationMinutes = s.DurationMinutes
+                })
+                .ToList();
+
+            return new TimerStatsResponse
+            {
+                TotalPomodoros = task.TotalPomodoros,
+                TotalFocusMinutes = task.TotalFocusMinutes,
+                RecentSessions = recentSessions
+            };
         }
     }
 }

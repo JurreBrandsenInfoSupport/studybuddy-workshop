@@ -1,6 +1,7 @@
 "use client"
 import type { StudyTask, TaskStatus } from "@/lib/types"
 import { Clock, BookOpen, Trash2 } from "lucide-react"
+import { PomodoroTimer } from "./pomodoro-timer"
 
 interface TaskCardProps {
   task: StudyTask
@@ -64,6 +65,23 @@ export function TaskCard({ task, onStatusChange, onDelete, isUpdating }: TaskCar
           </div>
         </div>
       </div>
+
+      {/* Pomodoro Timer */}
+      {task.status === "in-progress" && (
+        <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50/30 p-3">
+          <PomodoroTimer taskId={task.id} />
+        </div>
+      )}
+
+      {/* Pomodoro Stats */}
+      {task.totalPomodoros > 0 && (
+        <div className="mb-3 flex items-center gap-2 text-sm text-slate-600">
+          <span className="text-base">🍅</span>
+          <span className="font-semibold">{task.totalPomodoros} completed</span>
+          <span className="text-slate-400">•</span>
+          <span>{task.totalFocusMinutes} min focused</span>
+        </div>
+      )}
 
       {/* Actions */}
       <div className="mt-auto pt-3 border-t border-slate-100/50">

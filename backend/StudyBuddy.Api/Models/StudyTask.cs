@@ -8,4 +8,7 @@ public class StudyTask
     public int EstimatedMinutes { get; set; }
     public StudyTaskStatus Status { get; set; }
     public DateTime CreatedAt { get; set; }
+    public int TotalPomodoros { get; set; } = 0;
+    public int TotalFocusMinutes { get; set; } = 0;
+    public List<PomodoroSession> Sessions { get; set; } = new();
 }

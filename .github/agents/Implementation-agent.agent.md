@@ -13,10 +13,8 @@ handoffs:
   - label: Request Plan Clarification
     agent: Plan-Agent
     prompt: "The implementation plan needs clarification. Please review the questions and provide more details or adjust the plan based on discoveries made during implementation."
----
+  - label: Fix Implementation Issues
     agent: Implementation Agent
-    prompt: |
-      There are issues with the implementation that need to be fixed.
     prompt: "Fix the implementation issues that were identified. Review the feedback provided and make the necessary corrections to the code, following the same patterns and conventions as before."
   - label: Request Plan Clarification
     agent: Plan-Agent
