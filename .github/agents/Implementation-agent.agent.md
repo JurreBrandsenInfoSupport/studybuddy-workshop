@@ -1,7 +1,7 @@
 ---
 name: Implementation Agent
 description: Implement features based on comprehensive implementation plans
-tools: [vscode/getProjectSetupInfo, vscode/installExtension, vscode/newWorkspace, vscode/openSimpleBrowser, vscode/runCommand, vscode/askQuestions, vscode/vscodeAPI, vscode/extensions, execute/runNotebookCell, execute/testFailure, execute/getTerminalOutput, execute/awaitTerminal, execute/killTerminal, execute/createAndRunTask, execute/runInTerminal, execute/runTests, read/getNotebookSummary, read/problems, read/readFile, read/readNotebookCellOutput, read/terminalSelection, read/terminalLastCommand, agent/runSubagent, edit/createDirectory, edit/createFile, edit/createJupyterNotebook, edit/editFiles, edit/editNotebook, search/changes, search/codebase, search/fileSearch, search/listDirectory, search/searchResults, search/textSearch, search/usages, web/fetch, web/githubRepo, github/add_comment_to_pending_review, github/add_issue_comment, github/assign_copilot_to_issue, github/create_branch, github/create_or_update_file, github/create_pull_request, github/create_repository, github/delete_file, github/fork_repository, github/get_commit, github/get_file_contents, github/get_label, github/get_latest_release, github/get_me, github/get_release_by_tag, github/get_tag, github/get_team_members, github/get_teams, github/issue_read, github/issue_write, github/list_branches, github/list_commits, github/list_issue_types, github/list_issues, github/list_pull_requests, github/list_releases, github/list_tags, github/merge_pull_request, github/pull_request_read, github/pull_request_review_write, github/push_files, github/request_copilot_review, github/search_code, github/search_issues, github/search_pull_requests, github/search_repositories, github/search_users, github/sub_issue_write, github/update_pull_request, github/update_pull_request_branch, github/add_reply_to_pull_request_comment, todo]
+tools: [vscode, execute, read, agent, edit, search, web, browser, 'github/*', todo]
 handoffs:
   - label: Write Tests
     agent: Test Agent
@@ -11,15 +11,7 @@ handoffs:
     agent: Implementation Agent
     prompt: "Fix the implementation issues that were identified. Review the feedback provided and make the necessary corrections to the code, following the same patterns and conventions as before."
   - label: Request Plan Clarification
-    agent: Plan-Agent
-    prompt: "The implementation plan needs clarification. Please review the questions and provide more details or adjust the plan based on discoveries made during implementation."
----
-    agent: Implementation Agent
-    prompt: |
-      There are issues with the implementation that need to be fixed.
-    prompt: "Fix the implementation issues that were identified. Review the feedback provided and make the necessary corrections to the code, following the same patterns and conventions as before."
-  - label: Request Plan Clarification
-    agent: Plan-Agent
+    agent: Plan Agent
     prompt: "The implementation plan needs clarification. Please review the questions and provide more details or adjust the plan based on discoveries made during implementation."
 ---
 
