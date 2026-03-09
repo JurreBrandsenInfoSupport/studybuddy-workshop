@@ -1,0 +1,16 @@
+{
+  "eval_id": 2,
+  "eval_name": "label-bug-frontend-only",
+  "prompt": "An issue draft has been approved. Publish it to GitHub. Draft file: .github/skills/github-issue-publisher/evals/files/fix-filter-bug.md. Do NOT call github/issue_write. Instead produce dry_run_result.json with (owner, repo, title, body, labels) and confirmation.md.",
+  "assertions": [
+    "dry_run_result.json has owner = 'JurreBrandsenInfoSupport'",
+    "dry_run_result.json has repo = 'studybuddy-workshop'",
+    "dry_run_result.json title is 'Fix Task Status Filter Showing Wrong Tasks' (exact H1 without # prefix)",
+    "dry_run_result.json labels array contains 'bug'",
+    "dry_run_result.json labels array contains 'frontend'",
+    "dry_run_result.json labels array does NOT contain 'backend'",
+    "dry_run_result.json labels array does NOT contain 'feature'",
+    "dry_run_result.json body starts with the full H1 title line (includes the # heading at the start of body)",
+    "confirmation.md uses the required report format: 'Issue created: #NNN — <title>' on the first line"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "skill_name": "github-issue-publisher",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "An issue draft has been approved by the user. Publish it to GitHub. The draft file is at: .github/skills/github-issue-publisher/evals/files/add-pomodoro-timer.md\n\nDo NOT call github/issue_write in this test. Instead, produce a file called dry_run_result.json with the exact parameters you would pass to github/issue_write (owner, repo, title, body, labels). Also produce a confirmation.md showing the report you would give the user after a successful publish.",
+      "expected_output": "A dry_run_result.json with correct owner, repo, title extracted from the draft H1, full markdown body, and labels ['frontend', 'feature']. A confirmation.md with issue number placeholder, title, URL placeholder, and labels.",
+      "files": [".github/skills/github-issue-publisher/evals/files/add-pomodoro-timer.md"],
+      "expectations": [
+        "dry_run_result.json contains 'owner': 'JurreBrandsenInfoSupport'",
+        "dry_run_result.json contains 'repo': 'studybuddy-workshop'",
+        "dry_run_result.json title matches the H1 heading of the draft (without the # prefix)",
+        "dry_run_result.json labels array contains 'feature'",
+        "dry_run_result.json labels array contains 'frontend'",
+        "dry_run_result.json labels array does NOT contain 'backend' (Technical Notes lists Backend changes as None)",
+        "dry_run_result.json body contains the full markdown content of the draft",
+        "confirmation.md follows the expected report format with issue number, title, URL, and labels"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "An issue draft has been approved by the user. Publish it to GitHub. The draft file is at: .github/skills/github-issue-publisher/evals/files/fix-filter-bug.md\n\nDo NOT call github/issue_write in this test. Instead, produce a file called dry_run_result.json with the exact parameters you would pass to github/issue_write (owner, repo, title, body, labels). Also produce a confirmation.md showing the report you would give the user after a successful publish.",
+      "expected_output": "A dry_run_result.json with correct owner, repo, title, full body, and labels ['frontend', 'bug']. A confirmation.md with the expected report format.",
+      "files": [".github/skills/github-issue-publisher/evals/files/fix-filter-bug.md"],
+      "expectations": [
+        "dry_run_result.json contains 'owner': 'JurreBrandsenInfoSupport'",
+        "dry_run_result.json contains 'repo': 'studybuddy-workshop'",
+        "dry_run_result.json title matches the H1 heading of the draft (without the # prefix)",
+        "dry_run_result.json labels array contains 'bug'",
+        "dry_run_result.json labels array contains 'frontend'",
+        "dry_run_result.json labels array does NOT contain 'backend' (Technical Notes lists Backend changes as None)",
+        "dry_run_result.json labels array does NOT contain 'feature'",
+        "dry_run_result.json body contains the full markdown content of the draft",
+        "confirmation.md follows the expected report format with issue number, title, URL, and labels"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "eval_id": 2,
+  "eval_name": "filter-bug-report",
+  "run": "without_skill",
+  "expectations": [
+    {
+      "text": "The draft H1 title starts with 'Fix'",
+      "passed": false,
+      "evidence": "Title is '# Bug: Task status filter shows incorrect results — ...' — starts with 'Bug:' not a verb"
+    },
+    {
+      "text": "The draft contains a '## User Story' section with 'As a', 'I want', and 'so that'",
+      "passed": true,
+      "evidence": "'## User Story' section present with 'As a student...', 'I want...', 'So that...'"
+    },
+    {
+      "text": "The draft contains a '## Acceptance Criteria' section with at least 3 checkbox items (- [ ])",
+      "passed": true,
+      "evidence": "'## Acceptance Criteria' contains 6 checkbox items"
+    },
+    {
+      "text": "The draft contains a '## Technical Notes' section with Frontend changes, Backend changes, Database, and Dependencies rows",
+      "passed": false,
+      "evidence": "Has a '## Technical Notes' section but it uses freeform bullets referencing files, not the 4-row format (no Backend changes / Database / Dependencies labels)"
+    },
+    {
+      "text": "The draft contains a '## Testing Considerations' section (not '## Testing') mentioning edge cases",
+      "passed": false,
+      "evidence": "Section heading is '## Testing' not '## Testing Considerations'. Does mention edge cases in content."
+    },
+    {
+      "text": "The H1 title is 60 characters or fewer",
+      "passed": false,
+      "evidence": "Title 'Bug: Task status filter shows incorrect results — \\'in-progress\\' filter also displays \\'done\\' tasks' is ~96 characters"
+    },
+    {
+      "text": "The draft file is saved under the issues/ directory (not just the workspace outputs dir)",
+      "passed": false,
+      "evidence": "Subagent only saved to without_skill/outputs/draft.md — nothing saved under issues/"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "eval_id": 2,
+  "eval_name": "label-bug-frontend-only",
+  "run": "with_skill",
+  "expectations": [
+    {
+      "text": "dry_run_result.json has owner = 'JurreBrandsenInfoSupport'",
+      "passed": true,
+      "evidence": "\"owner\": \"JurreBrandsenInfoSupport\" confirmed in dry_run_result.json"
+    },
+    {
+      "text": "dry_run_result.json has repo = 'studybuddy-workshop'",
+      "passed": true,
+      "evidence": "\"repo\": \"studybuddy-workshop\" confirmed in dry_run_result.json"
+    },
+    {
+      "text": "dry_run_result.json title is 'Fix Task Status Filter Showing Wrong Tasks' (exact H1 without # prefix)",
+      "passed": true,
+      "evidence": "\"title\": \"Fix Task Status Filter Showing Wrong Tasks\" confirmed in dry_run_result.json"
+    },
+    {
+      "text": "dry_run_result.json labels array contains 'bug'",
+      "passed": true,
+      "evidence": "labels: [\"frontend\", \"bug\", \"testing\"] — 'bug' is present"
+    },
+    {
+      "text": "dry_run_result.json labels array contains 'frontend'",
+      "passed": true,
+      "evidence": "labels: [\"frontend\", \"bug\", \"testing\"] — 'frontend' is present"
+    },
+    {
+      "text": "dry_run_result.json labels array does NOT contain 'backend'",
+      "passed": true,
+      "evidence": "labels: [\"frontend\", \"bug\", \"testing\"] — 'backend' is absent"
+    },
+    {
+      "text": "dry_run_result.json labels array does NOT contain 'feature'",
+      "passed": true,
+      "evidence": "labels: [\"frontend\", \"bug\", \"testing\"] — 'feature' is absent"
+    },
+    {
+      "text": "dry_run_result.json body starts with the full H1 title line (includes the # heading at the start of body)",
+      "passed": true,
+      "evidence": "body starts with '# Fix Task Status Filter Showing Wrong Tasks\\n\\n' — H1 title included"
+    },
+    {
+      "text": "confirmation.md uses the required report format: 'Issue created: #NNN — <title>' on the first line",
+      "passed": true,
+      "evidence": "confirmation.md first line: 'Issue created: #999 — Fix Task Status Filter Showing Wrong Tasks'"
+    }
+  ]
+}

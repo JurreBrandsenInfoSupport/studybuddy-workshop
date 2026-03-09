@@ -79,11 +79,6 @@ docker compose up --build  # Backend on :3001, Frontend on :3000
 - **Endpoints**: All under `/api/tasks` - see [StudyBuddy.Api.http](backend/StudyBuddy.Api/StudyBuddy.Api.http) for examples
 - **CORS**: Backend allows all origins via `AddCors()` in [Program.cs](backend/StudyBuddy.Api/Program.cs)
 
-### Timer Feature (Backend Only - Not Yet in Frontend)
-- Endpoints: `POST /api/tasks/{id}/timer/start`, `POST /api/tasks/{id}/timer/stop`
-- Modes: `"normal"` or `"pomodoro"` (case-insensitive)
-- Frontend does not yet implement timer UI
-
 ## When Adding New Features
 
 1. **Backend**: Add endpoint in [Program.cs](backend/StudyBuddy.Api/Program.cs), add service method in [TaskService.cs](backend/StudyBuddy.Api/Services/TaskService.cs), add test in [ApiEndpointsTests.cs](backend/StudyBuddy.Api.Tests/ApiEndpointsTests.cs)

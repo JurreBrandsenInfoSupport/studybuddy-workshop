@@ -1,0 +1,37 @@
+{
+  "skill_name": "issue-draft-template",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Draft an issue to add a pomodoro timer UI to task cards in StudyBuddy+. The timer should support normal and pomodoro modes. Note that the backend already has the timer endpoints (POST /api/tasks/{id}/timer/start and POST /api/tasks/{id}/timer/stop) — only the frontend UI needs to be built.",
+      "expected_output": "A well-formed markdown issue draft in issues/ that follows the exact required format: H1 title starting with a verb, User Story, Description, Acceptance Criteria (checkboxes), Technical Notes with Frontend/Backend/Database/Dependencies rows, and Testing Considerations.",
+      "files": [],
+      "expectations": [
+        "The draft contains an H1 title that starts with 'Add', 'Implement', or 'Build'",
+        "The draft contains a '## User Story' section with 'As a', 'I want', and 'so that' lines",
+        "The draft contains an '## Acceptance Criteria' section with at least 3 checkbox items",
+        "The draft contains a '## Technical Notes' section with Frontend changes, Backend changes, Database, and Dependencies rows",
+        "The draft contains a '## Testing Considerations' section with unit tests, integration tests, and edge cases",
+        "Frontend changes are listed as non-None (UI work is required)",
+        "Backend changes are listed as None or note existing endpoints (no new backend work required)",
+        "The title is under 60 characters",
+        "The draft is saved to a file in the issues/ directory"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Create an issue to fix a bug where the task status filter on the StudyBuddy+ dashboard shows incorrect results — selecting 'in-progress' still displays tasks marked as 'done'.",
+      "expected_output": "A bug-fix issue draft with a Fix-prefixed title, clear acceptance criteria describing correct filter behavior, frontend-focused technical notes, and edge case testing considerations.",
+      "files": [],
+      "expectations": [
+        "The draft title starts with 'Fix'",
+        "The draft contains a '## User Story' section",
+        "The draft contains an '## Acceptance Criteria' section with checkboxes describing the correct filter behavior",
+        "The draft contains a '## Technical Notes' section identifying the frontend filter component",
+        "The draft contains a '## Testing Considerations' section that mentions edge cases like empty filter results",
+        "The title is under 60 characters",
+        "The draft is saved to a file in the issues/ directory"
+      ]
+    }
+  ]
+}

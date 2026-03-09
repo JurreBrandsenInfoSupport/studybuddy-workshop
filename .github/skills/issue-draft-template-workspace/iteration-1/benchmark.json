@@ -1,0 +1,147 @@
+{
+  "metadata": {
+    "skill_name": "issue-draft-template",
+    "skill_path": ".github/skills/issue-draft-template/SKILL.md",
+    "executor_model": "claude-sonnet-4",
+    "timestamp": "2026-03-09T00:00:00Z",
+    "evals_run": [1, 2],
+    "runs_per_configuration": 1
+  },
+
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "pomodoro-timer-feature",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 9,
+        "failed": 0,
+        "total": 9,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "The draft H1 title starts with 'Add', 'Implement', or 'Build'", "passed": true, "evidence": "Title is '# Add Pomodoro Timer UI to Task Cards' — starts with 'Add'"},
+        {"text": "The draft contains a '## User Story' section with 'As a', 'I want', and 'so that'", "passed": true, "evidence": "Section '## User Story' present with full structure"},
+        {"text": "The draft contains a '## Acceptance Criteria' section with at least 3 checkbox items (- [ ])", "passed": true, "evidence": "Contains 7 checkbox items"},
+        {"text": "The draft contains a '## Technical Notes' section with exactly these four row labels: Frontend changes, Backend changes, Database, Dependencies", "passed": true, "evidence": "All four rows present with correct bold labels"},
+        {"text": "The draft contains a '## Testing Considerations' section (not '## Testing') with unit tests, integration tests, and edge cases", "passed": true, "evidence": "Heading is '## Testing Considerations' with Unit tests, Integration tests, Edge cases subsections"},
+        {"text": "Frontend changes row is not 'None' (UI work is needed)", "passed": true, "evidence": "'**Frontend changes:** `frontend/components/task-card.tsx`...' — non-None"},
+        {"text": "Backend changes row is 'None' or notes existing endpoints (no new backend work)", "passed": true, "evidence": "'**Backend changes:** None — timer endpoints already exist'"},
+        {"text": "The H1 title is 60 characters or fewer", "passed": true, "evidence": "'Add Pomodoro Timer UI to Task Cards' is 36 characters"},
+        {"text": "The draft file is saved under the issues/ directory (not just the workspace outputs dir)", "passed": true, "evidence": "Saved to issues/test-pomodoro-timer.md"}
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "pomodoro-timer-feature",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.6667,
+        "passed": 6,
+        "failed": 3,
+        "total": 9,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "The draft H1 title starts with 'Add', 'Implement', or 'Build'", "passed": true, "evidence": "Title is '# Add Pomodoro Timer UI to Task Cards' — starts with 'Add'"},
+        {"text": "The draft contains a '## User Story' section with 'As a', 'I want', and 'so that'", "passed": true, "evidence": "'## User Story' section present"},
+        {"text": "The draft contains a '## Acceptance Criteria' section with at least 3 checkbox items (- [ ])", "passed": true, "evidence": "Contains 8 checkbox items"},
+        {"text": "The draft contains a '## Technical Notes' section with exactly these four row labels: Frontend changes, Backend changes, Database, Dependencies", "passed": false, "evidence": "Uses freeform bullet '**Frontend changes only — backend endpoints already exist**' — no separate Backend changes / Database / Dependencies rows"},
+        {"text": "The draft contains a '## Testing Considerations' section (not '## Testing') with unit tests, integration tests, and edge cases", "passed": false, "evidence": "Heading is '## Testing' (not '## Testing Considerations'); content is checkbox list, not Unit/Integration/Edge subsections"},
+        {"text": "Frontend changes row is not 'None' (UI work is needed)", "passed": true, "evidence": "Frontend changes clearly called out"},
+        {"text": "Backend changes row is 'None' or notes existing endpoints (no new backend work)", "passed": true, "evidence": "Described as existing endpoints"},
+        {"text": "The H1 title is 60 characters or fewer", "passed": true, "evidence": "36 characters"},
+        {"text": "The draft file is saved under the issues/ directory (not just the workspace outputs dir)", "passed": false, "evidence": "Only saved to without_skill/outputs/draft.md — no file under issues/"}
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "filter-bug-report",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "The draft H1 title starts with 'Fix'", "passed": true, "evidence": "'# Fix task status filter showing incorrect results'"},
+        {"text": "The draft contains a '## User Story' section with 'As a', 'I want', and 'so that'", "passed": true, "evidence": "All three parts present"},
+        {"text": "The draft contains a '## Acceptance Criteria' section with at least 3 checkbox items (- [ ])", "passed": true, "evidence": "6 checkboxes"},
+        {"text": "The draft contains a '## Technical Notes' section with Frontend changes, Backend changes, Database, and Dependencies rows", "passed": true, "evidence": "All four rows present"},
+        {"text": "The draft contains a '## Testing Considerations' section (not '## Testing') mentioning edge cases", "passed": true, "evidence": "Heading '## Testing Considerations' with 'Edge cases:' subsection"},
+        {"text": "The H1 title is 60 characters or fewer", "passed": true, "evidence": "49 characters"},
+        {"text": "The draft file is saved under the issues/ directory (not just the workspace outputs dir)", "passed": true, "evidence": "Saved to issues/test-fix-filter-bug.md"}
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "filter-bug-report",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.2857,
+        "passed": 2,
+        "failed": 5,
+        "total": 7,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "The draft H1 title starts with 'Fix'", "passed": false, "evidence": "Title starts with 'Bug:' not a verb — '# Bug: Task status filter shows incorrect results — ...' (also 96+ chars, over limit)"},
+        {"text": "The draft contains a '## User Story' section with 'As a', 'I want', and 'so that'", "passed": true, "evidence": "Section present with required lines"},
+        {"text": "The draft contains a '## Acceptance Criteria' section with at least 3 checkbox items (- [ ])", "passed": true, "evidence": "6 checkboxes"},
+        {"text": "The draft contains a '## Technical Notes' section with Frontend changes, Backend changes, Database, and Dependencies rows", "passed": false, "evidence": "Has '## Technical Notes' but uses freeform bullets, no Backend/Database/Dependencies rows"},
+        {"text": "The draft contains a '## Testing Considerations' section (not '## Testing') mentioning edge cases", "passed": false, "evidence": "Heading is '## Testing' not '## Testing Considerations'"},
+        {"text": "The H1 title is 60 characters or fewer", "passed": false, "evidence": "Title is 96+ characters"},
+        {"text": "The draft file is saved under the issues/ directory (not just the workspace outputs dir)", "passed": false, "evidence": "Only saved to without_skill/outputs/draft.md — nothing under issues/"}
+      ],
+      "notes": []
+    }
+  ],
+
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0},
+      "time_seconds": {"mean": 0.0, "stddev": 0.0, "min": 0.0, "max": 0.0},
+      "tokens": {"mean": 0, "stddev": 0, "min": 0, "max": 0}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.4762, "stddev": 0.2692, "min": 0.2857, "max": 0.6667},
+      "time_seconds": {"mean": 0.0, "stddev": 0.0, "min": 0.0, "max": 0.0},
+      "tokens": {"mean": 0, "stddev": 0, "min": 0, "max": 0}
+    },
+    "delta": {
+      "pass_rate": "+0.5238",
+      "time_seconds": "+0.0",
+      "tokens": "+0"
+    }
+  },
+
+  "notes": [
+    "The skill provides the largest benefit for bug-fix titles: without the skill, the title starts with 'Bug:' instead of 'Fix', breaks the verb-first constraint, and runs 96+ chars over the 60-char limit.",
+    "The '## Testing Considerations' heading is consistently dropped to '## Testing' without the skill — a subtle but recurring deviation.",
+    "The Technical Notes 4-row format (Frontend/Backend/Database/Dependencies) is reliably produced with the skill but collapses into freeform bullets without it.",
+    "Saving the draft to issues/ is missed by the baseline in both evals; the skill's explicit workflow step fixes this reliably.",
+    "With-skill achieves 100% pass rate on both evals. Without-skill scores 67% on a feature request and only 29% on a bug report — showing the skill's value grows when the request deviates from a simple 'Add X' pattern."
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "metadata": {
+    "skill_name": "github-issue-publisher",
+    "skill_path": ".github/skills/github-issue-publisher/SKILL.md",
+    "executor_model": "claude-sonnet-4",
+    "timestamp": "2026-03-09T00:00:00Z",
+    "evals_run": [1, 2],
+    "runs_per_configuration": 1
+  },
+
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "label-feature-frontend-only",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "dry_run_result.json has owner = 'JurreBrandsenInfoSupport'", "passed": true, "evidence": "\"owner\": \"JurreBrandsenInfoSupport\" confirmed"},
+        {"text": "dry_run_result.json has repo = 'studybuddy-workshop'", "passed": true, "evidence": "\"repo\": \"studybuddy-workshop\" confirmed"},
+        {"text": "dry_run_result.json title is 'Add Pomodoro Timer UI to Task Cards' (exact H1 without # prefix)", "passed": true, "evidence": "\"title\": \"Add Pomodoro Timer UI to Task Cards\""},
+        {"text": "dry_run_result.json labels array contains 'feature'", "passed": true, "evidence": "labels: [\"feature\", \"frontend\", \"testing\"]"},
+        {"text": "dry_run_result.json labels array contains 'frontend'", "passed": true, "evidence": "labels: [\"feature\", \"frontend\", \"testing\"]"},
+        {"text": "dry_run_result.json labels array does NOT contain 'backend'", "passed": true, "evidence": "backend absent from labels"},
+        {"text": "dry_run_result.json body starts with the full H1 title line (includes the # heading at the start of body)", "passed": true, "evidence": "body starts with '# Add Pomodoro Timer UI to Task Cards\\n\\n'"},
+        {"text": "confirmation.md uses the required report format: 'Issue created: #NNN — <title>' on the first line", "passed": true, "evidence": "First line: 'Issue created: #999 — Add Pomodoro Timer UI to Task Cards'"}
+      ],
+      "notes": ["With skill also applied 'testing' label — reasonable per the 'significant test coverage' rule, since a new useTimer hook is introduced"]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "label-feature-frontend-only",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.75,
+        "passed": 6,
+        "failed": 2,
+        "total": 8,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "dry_run_result.json has owner = 'JurreBrandsenInfoSupport'", "passed": true, "evidence": "Confirmed in dry_run_result.json"},
+        {"text": "dry_run_result.json has repo = 'studybuddy-workshop'", "passed": true, "evidence": "Confirmed in dry_run_result.json"},
+        {"text": "dry_run_result.json title is 'Add Pomodoro Timer UI to Task Cards' (exact H1 without # prefix)", "passed": true, "evidence": "Title correctly extracted"},
+        {"text": "dry_run_result.json labels array contains 'feature'", "passed": true, "evidence": "labels: [\"feature\", \"frontend\"]"},
+        {"text": "dry_run_result.json labels array contains 'frontend'", "passed": true, "evidence": "labels: [\"feature\", \"frontend\"]"},
+        {"text": "dry_run_result.json labels array does NOT contain 'backend'", "passed": true, "evidence": "backend absent"},
+        {"text": "dry_run_result.json body starts with the full H1 title line (includes the # heading at the start of body)", "passed": false, "evidence": "body starts with '## User Story' — the H1 title line is missing"},
+        {"text": "confirmation.md uses the required report format: 'Issue created: #NNN — <title>' on the first line", "passed": false, "evidence": "Uses a table format '# Issue Created Successfully' — no issue number, no standard report format"}
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "label-bug-frontend-only",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 9,
+        "failed": 0,
+        "total": 9,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "dry_run_result.json has owner = 'JurreBrandsenInfoSupport'", "passed": true, "evidence": "Confirmed"},
+        {"text": "dry_run_result.json has repo = 'studybuddy-workshop'", "passed": true, "evidence": "Confirmed"},
+        {"text": "dry_run_result.json title is 'Fix Task Status Filter Showing Wrong Tasks' (exact H1 without # prefix)", "passed": true, "evidence": "\"title\": \"Fix Task Status Filter Showing Wrong Tasks\""},
+        {"text": "dry_run_result.json labels array contains 'bug'", "passed": true, "evidence": "labels: [\"frontend\", \"bug\", \"testing\"]"},
+        {"text": "dry_run_result.json labels array contains 'frontend'", "passed": true, "evidence": "labels: [\"frontend\", \"bug\", \"testing\"]"},
+        {"text": "dry_run_result.json labels array does NOT contain 'backend'", "passed": true, "evidence": "backend absent"},
+        {"text": "dry_run_result.json labels array does NOT contain 'feature'", "passed": true, "evidence": "feature absent"},
+        {"text": "dry_run_result.json body starts with the full H1 title line (includes the # heading at the start of body)", "passed": true, "evidence": "body starts with '# Fix Task Status Filter Showing Wrong Tasks\\n\\n'"},
+        {"text": "confirmation.md uses the required report format: 'Issue created: #NNN — <title>' on the first line", "passed": true, "evidence": "First line: 'Issue created: #999 — Fix Task Status Filter Showing Wrong Tasks'"}
+      ],
+      "notes": ["'testing' label applied — consistent with skill rule; Testing Considerations section describes unit + integration + edge case coverage"]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "label-bug-frontend-only",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.7778,
+        "passed": 7,
+        "failed": 2,
+        "total": 9,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "dry_run_result.json has owner = 'JurreBrandsenInfoSupport'", "passed": true, "evidence": "Confirmed"},
+        {"text": "dry_run_result.json has repo = 'studybuddy-workshop'", "passed": true, "evidence": "Confirmed"},
+        {"text": "dry_run_result.json title is 'Fix Task Status Filter Showing Wrong Tasks' (exact H1 without # prefix)", "passed": true, "evidence": "Title correctly extracted"},
+        {"text": "dry_run_result.json labels array contains 'bug'", "passed": true, "evidence": "labels: [\"bug\", \"frontend\"]"},
+        {"text": "dry_run_result.json labels array contains 'frontend'", "passed": true, "evidence": "labels: [\"bug\", \"frontend\"]"},
+        {"text": "dry_run_result.json labels array does NOT contain 'backend'", "passed": true, "evidence": "backend absent"},
+        {"text": "dry_run_result.json labels array does NOT contain 'feature'", "passed": true, "evidence": "feature absent"},
+        {"text": "dry_run_result.json body starts with the full H1 title line (includes the # heading at the start of body)", "passed": false, "evidence": "body starts with '## User Story' — H1 title line omitted from body"},
+        {"text": "confirmation.md uses the required report format: 'Issue created: #NNN — <title>' on the first line", "passed": false, "evidence": "Table format used, no issue number — not the required single-line format"}
+      ],
+      "notes": []
+    }
+  ],
+
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0},
+      "time_seconds": {"mean": 0.0, "stddev": 0.0, "min": 0.0, "max": 0.0},
+      "tokens": {"mean": 0, "stddev": 0, "min": 0, "max": 0}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.7639, "stddev": 0.0198, "min": 0.75, "max": 0.7778},
+      "time_seconds": {"mean": 0.0, "stddev": 0.0, "min": 0.0, "max": 0.0},
+      "tokens": {"mean": 0, "stddev": 0, "min": 0, "max": 0}
+    },
+    "delta": {
+      "pass_rate": "+0.2361",
+      "time_seconds": "+0.0",
+      "tokens": "+0"
+    }
+  },
+
+  "notes": [
+    "The skill's most reliable discriminating behavior: body MUST include the H1 title line. Without the skill, both baseline runs omit the H1 title from the body, causing GitHub issues to lose the title header in the rendered body.",
+    "The confirmation report format ('Issue created: #NNN — <title>') is consistent with skill; without skill, a freeform table is produced with no issue number — breaking any downstream parsing.",
+    "Core label logic (feature/bug/frontend/backend) is correct with-skill AND without-skill for both evals — the without-skill agent has enough intrinsic knowledge to pick obvious labels.",
+    "The 'testing' label is consistently applied by the with-skill runs (both evals) but not by the without-skill runs. The rule in the skill ('significant new test coverage') may be worth tightening — consider clarifying what 'significant' means to distinguish routine boilerplate testing sections from substantial new coverage.",
+    "With-skill delta of +0.24 is smaller than issue-draft-template (+0.52). The publisher skill adds reliable output formatting and body completeness on top of an already-decent label determination baseline."
+  ]
+}

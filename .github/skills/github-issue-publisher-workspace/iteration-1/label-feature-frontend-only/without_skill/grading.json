@@ -1,0 +1,47 @@
+{
+  "eval_id": 1,
+  "eval_name": "label-feature-frontend-only",
+  "run": "without_skill",
+  "expectations": [
+    {
+      "text": "dry_run_result.json has owner = 'JurreBrandsenInfoSupport'",
+      "passed": true,
+      "evidence": "\"owner\": \"JurreBrandsenInfoSupport\" confirmed in dry_run_result.json"
+    },
+    {
+      "text": "dry_run_result.json has repo = 'studybuddy-workshop'",
+      "passed": true,
+      "evidence": "\"repo\": \"studybuddy-workshop\" confirmed in dry_run_result.json"
+    },
+    {
+      "text": "dry_run_result.json title is 'Add Pomodoro Timer UI to Task Cards' (exact H1 without # prefix)",
+      "passed": true,
+      "evidence": "\"title\": \"Add Pomodoro Timer UI to Task Cards\" confirmed in dry_run_result.json"
+    },
+    {
+      "text": "dry_run_result.json labels array contains 'feature'",
+      "passed": true,
+      "evidence": "labels: [\"feature\", \"frontend\"] — 'feature' is present"
+    },
+    {
+      "text": "dry_run_result.json labels array contains 'frontend'",
+      "passed": true,
+      "evidence": "labels: [\"feature\", \"frontend\"] — 'frontend' is present"
+    },
+    {
+      "text": "dry_run_result.json labels array does NOT contain 'backend'",
+      "passed": true,
+      "evidence": "labels: [\"feature\", \"frontend\"] — 'backend' is absent"
+    },
+    {
+      "text": "dry_run_result.json body starts with the full H1 title line (includes the # heading at the start of body)",
+      "passed": false,
+      "evidence": "body starts directly with '## User Story' — the H1 title line is missing from the body"
+    },
+    {
+      "text": "confirmation.md uses the required report format: 'Issue created: #NNN — <title>' on the first line",
+      "passed": false,
+      "evidence": "confirmation.md uses a custom table format starting with '# Issue Created Successfully' — not the required single-line format"
+    }
+  ]
+}

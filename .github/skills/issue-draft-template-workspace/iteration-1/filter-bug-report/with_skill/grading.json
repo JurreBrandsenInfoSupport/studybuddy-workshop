@@ -1,0 +1,42 @@
+{
+  "eval_id": 2,
+  "eval_name": "filter-bug-report",
+  "run": "with_skill",
+  "expectations": [
+    {
+      "text": "The draft H1 title starts with 'Fix'",
+      "passed": true,
+      "evidence": "Title is '# Fix task status filter showing incorrect results' — starts with 'Fix'"
+    },
+    {
+      "text": "The draft contains a '## User Story' section with 'As a', 'I want', and 'so that'",
+      "passed": true,
+      "evidence": "'## User Story' section present with all three required lines"
+    },
+    {
+      "text": "The draft contains a '## Acceptance Criteria' section with at least 3 checkbox items (- [ ])",
+      "passed": true,
+      "evidence": "'## Acceptance Criteria' contains 6 checkbox items"
+    },
+    {
+      "text": "The draft contains a '## Technical Notes' section with Frontend changes, Backend changes, Database, and Dependencies rows",
+      "passed": true,
+      "evidence": "'## Technical Notes' has '**Frontend changes:**', '**Backend changes:** None', '**Database:** None', '**Dependencies:** None'"
+    },
+    {
+      "text": "The draft contains a '## Testing Considerations' section (not '## Testing') mentioning edge cases",
+      "passed": true,
+      "evidence": "Heading is '## Testing Considerations' and body contains 'Edge cases:' sub-item"
+    },
+    {
+      "text": "The H1 title is 60 characters or fewer",
+      "passed": true,
+      "evidence": "'Fix task status filter showing incorrect results' is 49 characters"
+    },
+    {
+      "text": "The draft file is saved under the issues/ directory (not just the workspace outputs dir)",
+      "passed": true,
+      "evidence": "Subagent reported saving to issues/test-fix-filter-bug.md"
+    }
+  ]
+}

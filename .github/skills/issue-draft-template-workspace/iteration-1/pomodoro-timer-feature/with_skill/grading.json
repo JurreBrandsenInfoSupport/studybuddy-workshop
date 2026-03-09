@@ -1,0 +1,52 @@
+{
+  "eval_id": 1,
+  "eval_name": "pomodoro-timer-feature",
+  "run": "with_skill",
+  "expectations": [
+    {
+      "text": "The draft H1 title starts with 'Add', 'Implement', or 'Build'",
+      "passed": true,
+      "evidence": "Title is '# Add Pomodoro Timer UI to Task Cards' — starts with 'Add'"
+    },
+    {
+      "text": "The draft contains a '## User Story' section with 'As a', 'I want', and 'so that'",
+      "passed": true,
+      "evidence": "Section '## User Story' present with 'As a student,', 'I want a timer on each task card...', 'so that I can track focused study sessions...'"
+    },
+    {
+      "text": "The draft contains a '## Acceptance Criteria' section with at least 3 checkbox items (- [ ])",
+      "passed": true,
+      "evidence": "Section '## Acceptance Criteria' contains 7 checkbox items"
+    },
+    {
+      "text": "The draft contains a '## Technical Notes' section with exactly these four row labels: Frontend changes, Backend changes, Database, Dependencies",
+      "passed": true,
+      "evidence": "Section '## Technical Notes' contains: '**Frontend changes:**', '**Backend changes:** None', '**Database:** None', '**Dependencies:** None'"
+    },
+    {
+      "text": "The draft contains a '## Testing Considerations' section (not '## Testing') with unit tests, integration tests, and edge cases",
+      "passed": true,
+      "evidence": "Section heading is exactly '## Testing Considerations' and contains 'Unit tests:', 'Integration tests:', 'Edge cases:'"
+    },
+    {
+      "text": "Frontend changes row is not 'None' (UI work is needed)",
+      "passed": true,
+      "evidence": "'**Frontend changes:** `frontend/components/task-card.tsx` (primary...)' — clearly non-None"
+    },
+    {
+      "text": "Backend changes row is 'None' or notes existing endpoints (no new backend work)",
+      "passed": true,
+      "evidence": "'**Backend changes:** None — timer endpoints already exist'"
+    },
+    {
+      "text": "The H1 title is 60 characters or fewer",
+      "passed": true,
+      "evidence": "'Add Pomodoro Timer UI to Task Cards' is 36 characters"
+    },
+    {
+      "text": "The draft file is saved under the issues/ directory (not just the workspace outputs dir)",
+      "passed": true,
+      "evidence": "Subagent reported saving to issues/test-pomodoro-timer.md"
+    }
+  ]
+}

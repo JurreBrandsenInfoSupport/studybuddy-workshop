@@ -45,41 +45,10 @@ You will receive:
 
 ### Step 3: Draft the Issue
 
-Create a markdown file in the `issues/` folder with the following structure:
+Use the `issue-draft-template` skill from `.github/skills/issue-draft-template/SKILL.md`.
 
-#### Title
-- Short, action-oriented (max 60 characters)
-- Start with a verb (Add, Fix, Update, Implement)
-- Example: "Add pomodoro timer to task sessions"
-
-#### User Story
-```
-As a [user type],
-I want [goal],
-so that [benefit].
-```
-
-#### Description
-- Summarize the context and purpose (2-3 sentences)
-- Reference related features or dependencies
-- Note any technical constraints or requirements
-
-#### Acceptance Criteria
-Use testable, specific criteria:
-- [ ] Expected outcome 1 (be specific about what should happen)
-- [ ] Expected outcome 2 (include edge cases)
-- [ ] Expected outcome 3 (specify validation rules)
-
-#### Technical Notes
-- **Frontend changes:** Affected components/pages
-- **Backend changes:** API endpoints, service methods, data models
-- **Database:** Schema changes if needed
-- **Dependencies:** New packages or libraries required
-
-#### Testing Considerations
-- Unit tests: What functionality needs unit tests?
-- Integration tests: What workflows need end-to-end testing?
-- Edge cases: What boundary conditions should be tested?
+- Follow the skill's required output format exactly.
+- Create the draft markdown file in `issues/`.
 
 ### Step 4: Review with User
 
@@ -90,11 +59,12 @@ Use testable, specific criteria:
 
 ### Step 5: Create GitHub Issue
 
-Once the user approves:
-- Use `#tool:github/issue_write to create the issue in the repository
-- Include all sections from the draft
-- Add appropriate labels (frontend, backend, feature, bug, etc.)
-- Assign to project board if applicable
+Once the user approves, use the `github-issue-publisher` skill from `.github/skills/github-issue-publisher/SKILL.md`.
+
+The skill will:
+- Determine the correct labels from the draft content (frontend, backend, feature, bug, enhancement, testing, documentation)
+- Call `github/issue_write` with the title, body, and computed labels
+- Report back the created issue number and URL
 
 ## Issue Writing Guidelines
 

@@ -1,0 +1,14 @@
+{
+  "eval_id": 2,
+  "eval_name": "filter-bug-report",
+  "prompt": "Create an issue to fix a bug where the task status filter on the StudyBuddy+ dashboard shows incorrect results — selecting 'in-progress' still displays tasks marked as 'done'.",
+  "assertions": [
+    "The draft H1 title starts with 'Fix'",
+    "The draft contains a '## User Story' section with 'As a', 'I want', and 'so that'",
+    "The draft contains a '## Acceptance Criteria' section with at least 3 checkbox items (- [ ])",
+    "The draft contains a '## Technical Notes' section with Frontend changes, Backend changes, Database, and Dependencies rows",
+    "The draft contains a '## Testing Considerations' section (not '## Testing') mentioning edge cases",
+    "The H1 title is 60 characters or fewer",
+    "The draft file is saved under the issues/ directory (not just the workspace outputs dir)"
+  ]
+}

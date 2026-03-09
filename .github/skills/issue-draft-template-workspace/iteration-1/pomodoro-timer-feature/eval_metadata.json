@@ -1,0 +1,16 @@
+{
+  "eval_id": 1,
+  "eval_name": "pomodoro-timer-feature",
+  "prompt": "Draft an issue to add a pomodoro timer UI to task cards in StudyBuddy+. The timer should support normal and pomodoro modes. Note that the backend already has the timer endpoints (POST /api/tasks/{id}/timer/start and POST /api/tasks/{id}/timer/stop) — only the frontend UI needs to be built.",
+  "assertions": [
+    "The draft H1 title starts with 'Add', 'Implement', or 'Build'",
+    "The draft contains a '## User Story' section with 'As a', 'I want', and 'so that'",
+    "The draft contains a '## Acceptance Criteria' section with at least 3 checkbox items (- [ ])",
+    "The draft contains a '## Technical Notes' section with exactly these four row labels: Frontend changes, Backend changes, Database, Dependencies",
+    "The draft contains a '## Testing Considerations' section (not '## Testing') with unit tests, integration tests, and edge cases",
+    "Frontend changes row is not 'None' (UI work is needed)",
+    "Backend changes row is 'None' or notes existing endpoints (no new backend work)",
+    "The H1 title is 60 characters or fewer",
+    "The draft file is saved under the issues/ directory (not just the workspace outputs dir)"
+  ]
+}
