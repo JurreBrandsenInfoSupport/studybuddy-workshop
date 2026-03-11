@@ -51,12 +51,20 @@ Only research what the implement agent cannot trivially discover itself.
 ### Step 3 — Self-validate before writing
 Work through these checks. Fix gaps before writing the document.
 
-**Completeness** — confirm all seven sections are ready:
+**Stacked PR breakdown** — group the ordered tasks into sequential, independently-mergeable PRs:
+- Each PR should build on the previous one (PR 2 branches from PR 1's branch, etc.)
+- Each PR must leave the codebase in a passing, deployable state (all tests green)
+- Aim for 1–4 tasks per PR; split along natural seams (e.g. backend → frontend → tests)
+- Name branches descriptively: `feature/{name}/part-1-{short-label}`, `feature/{name}/part-2-{short-label}`, etc.
+- The final PR in the stack merges into `main`; intermediate PRs merge into the PR below them
+
+**Completeness** — confirm all eight sections are ready:
 - [ ] Feature overview (one paragraph)
 - [ ] Key references (exact paths, line ranges, one-sentence pattern description each)
 - [ ] Architectural constraints (what must not change)
 - [ ] Gotchas (non-obvious traps only)
 - [ ] Ordered task list (numbered, each step references specific files)
+- [ ] Stacked PR breakdown (tasks grouped into sequential, independently-mergeable PRs)
 - [ ] Validation gates (runnable commands with passing criteria)
 - [ ] Completion checklist (flat checkboxes)
 
@@ -101,6 +109,12 @@ Use this structure exactly:
 1. {Task} — touch `path/to/file.cs`, run `{validation command}` after
 2. ...
 
+## Stacked PR Breakdown
+| PR | Branch | Tasks | Merges into |
+|----|--------|-------|-------------|
+| PR 1 | `feature/{name}/part-1-{label}` | 1, 2 | PR 2's branch |
+| PR 2 | `feature/{name}/part-2-{label}` | 3, 4 | `main` |
+
 ## Validation Gates
 - `{command}` — passing: {expected output}
 
@@ -114,6 +128,7 @@ You are done when:
 1. The document is saved to `docs/implementation-plans/{feature-name}.md`
 2. All four self-validation checks passed before you wrote it
 3. Every acceptance criterion in the issue maps to a task in the document
+4. Every task is assigned to a PR in the Stacked PR Breakdown table
 
 Do not run any tests, write any implementation code, or proceed beyond saving the document.
 The implement agent takes over from here.

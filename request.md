@@ -1,0 +1,1 @@
+I have a request to add a feature which allows users create different todo profiles. Each profile can have its own set of todos, and users can switch between profiles as needed. This would be useful for users who want to organize their tasks based on different contexts, such as work, personal life, or specific projects.

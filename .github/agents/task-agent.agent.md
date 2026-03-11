@@ -31,7 +31,7 @@ If the request is clear enough to proceed, skip straight to Step 2.
 
 ### Step 3: Draft the Issue
 
-Use the `issue-draft-template` skill (`.github/skills/issue-draft-template/SKILL.md`). The skill owns the format, quality rules, and file output.
+Create a markdown file in `issues/`, this will act as a draft.
 
 ### Step 4: Review and Iterate
 
@@ -39,4 +39,4 @@ Present the draft to the user. Revise based on feedback until approved.
 
 ### Step 5: Publish to GitHub
 
-Use the `github-issue-publisher` skill (`.github/skills/github-issue-publisher/SKILL.md`). The skill owns label logic, the API call, and result reporting.
+Once the user approves the draft add the issue to Github
